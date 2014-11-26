@@ -1,0 +1,25 @@
+From 37038a7a5b7a4242fc16c766a06b9eff9fa6c63f Mon Sep 17 00:00:00 2001
+From: Stanislav Vlasic <svlasic@gmail.com>
+Date: Sat, 19 Apr 2014 00:56:25 +0200
+Subject: [PATCH] Recognize Meson8 platform in AMLUtils
+
+---
+ xbmc/utils/AMLUtils.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/xbmc/utils/AMLUtils.cpp b/xbmc/utils/AMLUtils.cpp
+index dc5cc1e..bb92bcc 100644
+--- a/xbmc/utils/AMLUtils.cpp
++++ b/xbmc/utils/AMLUtils.cpp
+@@ -169,6 +169,8 @@ int aml_get_cputype()
+       aml_cputype = 3;
+     else if (cpu_hardware.find("Meson6") != std::string::npos)
+       aml_cputype = 6;
++    else if (cpu_hardware.find("Meson8") != std::string::npos)
++      aml_cputype = 8;
+   }
+ 
+   return aml_cputype;
+-- 
+1.9.1
+
