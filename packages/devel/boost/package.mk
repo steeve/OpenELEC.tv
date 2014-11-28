@@ -67,7 +67,8 @@ makeinstall_target() {
   $ROOT/$TOOLCHAIN/bin/bjam -d2 --toolset=gcc link=static \
                                 --prefix=$SYSROOT_PREFIX/usr \
                                 --ignore-site-config \
-                                --layout=system \
+                                --layout=tagged \
+                                --with-python \
                                 --with-thread \
                                 --with-iostreams \
                                 --with-system \
