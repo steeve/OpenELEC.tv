@@ -1,0 +1,29 @@
+diff -Naur Python-2.7.3.orig/Include/pyport.h Python-2.7.3/Include/pyport.h
+index cfe2630..1abc14c 100644
+--- Python-2.7.3.orig/Include/pyport.h
++++ Python-2.7.3/Include/pyport.h
+@@ -835,20 +835,22 @@ typedef struct fd_set {
+ #ifndef LONG_MIN
+ #define LONG_MIN (-LONG_MAX-1)
+ #endif
+-
++/*
+ #ifndef LONG_BIT
+ #define LONG_BIT (8 * SIZEOF_LONG)
+ #endif
+
+ #if LONG_BIT != 8 * SIZEOF_LONG
++*/
+ /* 04-Oct-2000 LONG_BIT is apparently (mis)defined as 64 on some recent
+  * 32-bit platforms using gcc.  We try to catch that here at compile-time
+  * rather than waiting for integer multiplication to trigger bogus
+  * overflows.
+  */
++/*
+ #error "LONG_BIT definition appears wrong for platform (bad gcc/glibc config?)."
+ #endif
+-
++*/
+ #ifdef __cplusplus
+ }
+ #endif
