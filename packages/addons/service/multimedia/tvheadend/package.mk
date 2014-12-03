@@ -17,8 +17,8 @@
 ################################################################################
 
 PKG_NAME="tvheadend"
-PKG_VERSION="3.9.2168"
-PKG_REV="3"
+PKG_VERSION="3.9.2182"
+PKG_REV="6"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="http://www.tvheadend.org"
@@ -36,6 +36,10 @@ pre_build_target() {
   mkdir -p $PKG_BUILD/.$TARGET_NAME
   cp -RP $PKG_BUILD/* $PKG_BUILD/.$TARGET_NAME
   export CROSS_COMPILE=$TARGET_PREFIX
+  # meh imx6..
+  if [ "$TARGET_ARCH" == "arm" ] ; then
+    export CFLAGS="$CFLAGS -mno-unaligned-access"
+  fi
 }
 
 configure_target() {
