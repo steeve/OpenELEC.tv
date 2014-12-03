@@ -151,7 +151,7 @@
     # show cursor
     echo 0 > /sys/devices/virtual/graphics/fbcon/cursor_blink
 
-    sh </dev/tty1 >/dev/tty1 2>&1
+    exec sh
   }
 
   error() {
