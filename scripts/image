@@ -361,6 +361,7 @@ IMAGE_NAME="$DISTRONAME-$TARGET_VERSION"
           echo --update_package=/sdcard/$IMAGE_NAME-update.zip > factory_update_param.aml
           if [ "$DEVICE" = "S806" ]; then
              echo --update_package=/udisk/$IMAGE_NAME-update.zip > factory_update_param.aml
+          fi
           echo --wipe_cache >>  factory_update_param.aml
           cp $INSTALL_SRC_DIR/files/recovery.img .
           zip -q $TARGET_IMG/$IMAGE_NAME.zip *
