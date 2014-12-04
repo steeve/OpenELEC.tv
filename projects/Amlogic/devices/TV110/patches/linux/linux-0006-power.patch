@@ -1,6 +1,6 @@
-diff -Nru linux-amlogic-3.10.40.orig/arch/arm/mach-meson8/pm.c linux-amlogic-3.10.40/arch/arm/mach-meson8/pm.c
---- linux-amlogic-3.10.40.orig/arch/arm/mach-meson8/pm.c	2014-11-24 04:54:32.000000000 +0300
-+++ linux-amlogic-3.10.40/arch/arm/mach-meson8/pm.c	2014-11-26 09:00:38.597946564 +0300
+diff -Nru linux-amlogic-3.10.40.orig/arch/arm/mach-meson8b/pm.c linux-amlogic-3.10.40/arch/arm/mach-meson8b/pm.c
+--- linux-amlogic-3.10.40.orig/arch/arm/mach-meson8b/pm.c	2014-11-24 04:54:32.000000000 +0300
++++ linux-amlogic-3.10.40/arch/arm/mach-meson8b/pm.c	2014-12-04 12:16:28.409151522 +0300
 @@ -10,6 +10,7 @@
  
  #include <linux/pm.h>
@@ -9,7 +9,7 @@ diff -Nru linux-amlogic-3.10.40.orig/arch/arm/mach-meson8/pm.c linux-amlogic-3.1
  #include <linux/module.h>
  #include <linux/platform_device.h>
  #include <linux/clk.h>
-@@ -332,6 +333,8 @@
+@@ -346,6 +347,8 @@
  static void meson_pm_finish(void)
  {
      printk(KERN_INFO "enter meson_pm_finish!\n");
