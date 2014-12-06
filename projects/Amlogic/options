@@ -50,7 +50,14 @@
       # arm1176jz-s arm1176jzf-s cortex-a8 cortex-a9 cortex-r4
       # cortex-r4f cortex-m3 cortex-m1 xscale iwmmxt iwmmxt2 ep9312.
       #
-      TARGET_CPU="cortex-a9"
+      case $DEVICE in
+        TV110)
+          TARGET_CPU="cortex-a5"
+          ;;
+        *)
+          TARGET_CPU="cortex-a9"
+          ;;
+      esac
 
       # TARGET_FLOAT:
       # Specifies which floating-point ABI to use. Permissible values are:
@@ -327,7 +334,7 @@
   TESTING="no"
 
 # OEM packages for OEM's (yes / no)
-  OEM_SUPPORT="no"
+  OEM_SUPPORT="yes"
 
 # build and install nano text editor (yes / no)
   NANO_EDITOR="yes"

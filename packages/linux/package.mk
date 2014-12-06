@@ -156,10 +156,15 @@ make_target() {
     done
   fi
 
+  if [ "$MULTI_DTBS" = "yes" ]; then
+    mkdir -p out
+    $ROOT/projects/$PROJECT/dtbTool -o out/dt.img -p scripts/dtc/ arch/arm/boot/dts/amlogic/
+  fi
+
   LDFLAGS="" make $KERNEL_IMAGE $KERNEL_MAKE_EXTRACMD
 
   if [ "$BUILD_ANDROID_BOOTIMG" = "yes" ]; then
-    LDFLAGS="" mkbootimg --kernel arch/arm/boot/$KERNEL_IMAGE --ramdisk $ROOT/$BUILD/image/initramfs.cpio \
+    LDFLAGS="" ./mkbootimg --kernel arch/arm/boot/$KERNEL_IMAGE --ramdisk $ROOT/$BUILD/image/initramfs.cpio \
       --second "$ANDROID_BOOTIMG_SECOND" --output arch/arm/boot/boot.img
     mv -f arch/arm/boot/boot.img arch/arm/boot/$KERNEL_IMAGE
   fi
