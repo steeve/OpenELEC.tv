@@ -45,7 +45,7 @@ fi
 
 # Include deinterlacer into default VFM map
 echo rm default > /sys/class/vfm/map
-echo add default decoder ppmgr deinterlace amvideo > /sys/class/vfm/map
+echo add default decoder deinterlace amvideo > /sys/class/vfm/map
 
 # Parse command line arguments
 for arg in $(cat /proc/cmdline); do
