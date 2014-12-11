@@ -16,37 +16,26 @@
 #  along with OpenELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-PKG_NAME="opengl-meson6"
-PKG_VERSION="r4p0-01-armhf"
+PKG_NAME="iwlwifi-firmware"
+PKG_VERSION="0.0.1"
 PKG_REV="1"
-PKG_ARCH="arm"
-PKG_LICENSE="nonfree"
-PKG_SITE="http://openlinux.amlogic.com:8000/download/ARM/filesystem/"
+PKG_ARCH="any"
+PKG_LICENSE="Free-to-use"
+PKG_SITE="https://github.com/OpenELEC/iwlwifi-firmware"
 PKG_URL="$DISTRO_SRC/$PKG_NAME-$PKG_VERSION.tar.xz"
 PKG_DEPENDS_TARGET="toolchain"
 PKG_PRIORITY="optional"
-PKG_SECTION="graphics"
-PKG_SHORTDESC="opengl-meson6: OpenGL ES pre-compiled libraries for Mali 400 GPUs found in Amlogic Meson6 SoCs"
-PKG_LONGDESC="opengl-meson6: OpenGL ES pre-compiled libraries for Mali 400 GPUs found in Amlogic Meson6 SoCs. The libraries could be found in a Linux buildroot released by Amlogic at http://openlinux.amlogic.com:8000/download/ARM/filesystem/. See the opengl package."
+PKG_SECTION="firmware"
+PKG_SHORTDESC="iwlwifi-firmware: firmwares for various Intel WLAN drivers"
+PKG_LONGDESC="iwlwifi-firmware: firmwares for various Intel WLAN drivers"
 
 PKG_IS_ADDON="no"
 PKG_AUTORECONF="no"
 
 make_target() {
- : # nothing todo
+  : # nothing todo
 }
 
 makeinstall_target() {
-  mkdir -p $SYSROOT_PREFIX/usr/include
-    cp -PR usr/include/* $SYSROOT_PREFIX/usr/include
-
-  mkdir -p $SYSROOT_PREFIX/usr/lib
-    cp -PR usr/lib/*.so* $SYSROOT_PREFIX/usr/lib
-
-  mkdir -p $INSTALL/usr/lib
-    cp -PR usr/lib/*.so* $INSTALL/usr/lib
-}
-
-post_install() {
-  enable_service unbind-console.service
+  DESTDIR=$INSTALL ./install
 }

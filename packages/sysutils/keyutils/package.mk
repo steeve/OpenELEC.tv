@@ -16,37 +16,27 @@
 #  along with OpenELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-PKG_NAME="opengl-meson6"
-PKG_VERSION="r4p0-01-armhf"
+PKG_NAME="keyutils"
+PKG_VERSION="1.5.9"
 PKG_REV="1"
-PKG_ARCH="arm"
-PKG_LICENSE="nonfree"
-PKG_SITE="http://openlinux.amlogic.com:8000/download/ARM/filesystem/"
-PKG_URL="$DISTRO_SRC/$PKG_NAME-$PKG_VERSION.tar.xz"
+PKG_ARCH="any"
+PKG_LICENSE="GPL"
+PKG_SITE="http://people.redhat.com/~dhowells/keyutils/"
+PKG_URL="http://people.redhat.com/~dhowells/keyutils/$PKG_NAME-$PKG_VERSION.tar.bz2"
 PKG_DEPENDS_TARGET="toolchain"
 PKG_PRIORITY="optional"
-PKG_SECTION="graphics"
-PKG_SHORTDESC="opengl-meson6: OpenGL ES pre-compiled libraries for Mali 400 GPUs found in Amlogic Meson6 SoCs"
-PKG_LONGDESC="opengl-meson6: OpenGL ES pre-compiled libraries for Mali 400 GPUs found in Amlogic Meson6 SoCs. The libraries could be found in a Linux buildroot released by Amlogic at http://openlinux.amlogic.com:8000/download/ARM/filesystem/. See the opengl package."
+PKG_SECTION="system"
+PKG_SHORTDESC="keyutils: Linux Key Management Utilities"
+PKG_LONGDESC="Keyutils is a set of utilities for managing the key retention facility in the kernel."
 
 PKG_IS_ADDON="no"
 PKG_AUTORECONF="no"
+PKG_MAKE_OPTS_TARGET="NO_ARLIB=0 NO_SOLIB=1 LIBDIR=/lib USRLIBDIR=/usr/lib"
+PKG_MAKEINSTALL_OPTS_TARGET="$PKG_MAKE_OPTS_TARGET"
 
-make_target() {
- : # nothing todo
+post_makeinstall_target() {
+	rm -rf $INSTALL/usr
+	rmdir $INSTALL/etc/request-key.d
+	ln -sf /storage/.config/request-key.d $INSTALL/etc/request-key.d
 }
 
-makeinstall_target() {
-  mkdir -p $SYSROOT_PREFIX/usr/include
-    cp -PR usr/include/* $SYSROOT_PREFIX/usr/include
-
-  mkdir -p $SYSROOT_PREFIX/usr/lib
-    cp -PR usr/lib/*.so* $SYSROOT_PREFIX/usr/lib
-
-  mkdir -p $INSTALL/usr/lib
-    cp -PR usr/lib/*.so* $INSTALL/usr/lib
-}
-
-post_install() {
-  enable_service unbind-console.service
-}
