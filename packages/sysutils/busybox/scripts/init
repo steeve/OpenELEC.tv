@@ -47,7 +47,7 @@
   MD5_NOCHECK="0"
   SIZE_FAILED="0"
   RUN_FSCK="yes"
-  RUN_FSCK_DISKS=""
+  RUN_FSCK_DISKS=" "
 
   NBD_DEVS="0"
   FLASH_FREE_MIN="5"
@@ -421,7 +421,7 @@
   check_disks() {
     if [ "$RUN_FSCK" = "yes" -a -n "$RUN_FSCK_DISKS" ]; then
       progress "Checking disk(s): $RUN_FSCK_DISKS"
-        /sbin/fsck -T -M -y $RUN_FSCK_DISKS > /dev/null 2>&1
+        /sbin/fsck -T -M -p -a $RUN_FSCK_DISKS > /dev/null 2>&1
         FSCK_RET="$?"
 
         case "$FSCK_RET" in

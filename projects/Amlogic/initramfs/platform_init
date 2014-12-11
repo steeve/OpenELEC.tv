@@ -18,6 +18,10 @@
 #  along with OpenELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
+/sbin/fsck.ext4 -f -y /dev/system
+/sbin/fsck.ext4 -f -y /dev/data
+/sbin/fsck.ext4 -f -y /dev/cache
+
 # Force 720p display mode at startup
 echo 720p > /sys/class/display/mode
 
