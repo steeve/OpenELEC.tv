@@ -18,6 +18,10 @@
 #  along with OpenELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
+/sbin/fsck.ext4 -f -y /dev/system
+/sbin/fsck.ext4 -f -y /dev/data
+/sbin/fsck.ext4 -f -y /dev/cache
+
 # Force 720p display mode at startup
 echo 720p > /sys/class/display/mode
 
@@ -45,7 +49,7 @@ fi
 
 # Include deinterlacer into default VFM map
 echo rm default > /sys/class/vfm/map
-echo add default decoder ppmgr deinterlace amvideo > /sys/class/vfm/map
+echo add default decoder deinterlace amvideo > /sys/class/vfm/map
 
 # Parse command line arguments
 for arg in $(cat /proc/cmdline); do
