@@ -18,13 +18,13 @@
 
 PKG_NAME="libamplayer"
 PKG_VERSION="75f23da"
-PKG_VERSION="m8"
+#PKG_VERSION="m8"
 PKG_REV="1"
 PKG_ARCH="arm"
 PKG_LICENSE="other"
 PKG_SITE="http://www.amlogic.com"
 PKG_URL="https://dl.dropboxusercontent.com/u/18902170/$PKG_NAME-$PKG_VERSION.tar.xz"
-PKG_URL="http://amlinux.ru/source/$PKG_NAME-$PKG_VERSION.tar.gz"
+#PKG_URL="http://amlinux.ru/source/$PKG_NAME-$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain alsa-lib ffmpeg"
 PKG_PRIORITY="optional"
 PKG_SECTION="multimedia"
@@ -42,8 +42,6 @@ make_target() {
 
   make -C amadec CC="$CC" PREFIX="$SYSROOT_PREFIX/usr" CROSS_PREFIX="$TARGET_PREFIX" install
   make -C amcodec CC="$CC" HEADERS_DIR="$SYSROOT_PREFIX/usr/include/amcodec" PREFIX="$SYSROOT_PREFIX/usr" CROSS_PREFIX="$TARGET_PREFIX" install
-#  cp -ar $SYSROOT_PREFIX/usr/include/amcodec $SYSROOT_PREFIX/usr/include
-#  make -C amplayer CC="$CC" STAGING="$SYSROOT_PREFIX/usr" PREFIX="$SYSROOT_PREFIX/usr" CROSS_PREFIX="$TARGET_PREFIX" install
 }
 
 makeinstall_target() {
@@ -53,5 +51,4 @@ makeinstall_target() {
 
   make -C amadec PREFIX="$INSTALL/usr" install
   make -C amcodec HEADERS_DIR="$INSTALL/usr/include/amcodec" PREFIX="$INSTALL/usr" install
-#  make -C amplayer CC="$CC" STAGING="$SYSROOT_PREFIX/usr" PREFIX="$INSTALL/usr" install
 }
