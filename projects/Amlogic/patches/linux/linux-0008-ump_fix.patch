@@ -1,0 +1,12 @@
+diff -Nru linux-amlogic-2058c9f.orig/drivers/amlogic/ump/Kbuild linux-amlogic-2058c9f/drivers/amlogic/ump/Kbuild
+--- linux-amlogic-2058c9f.orig/drivers/amlogic/ump/Kbuild	2014-12-15 09:21:35.000000000 +0300
++++ linux-amlogic-2058c9f/drivers/amlogic/ump/Kbuild	2014-12-17 22:04:48.897912636 +0300
+@@ -32,7 +32,7 @@
+ UDD_FILE_PREFIX = ../mali/
+ 
+ # Get subversion revision number, fall back to 0000 if no svn info is available
+-SVN_REV := $(shell ((svnversion | grep -qv exported && echo -n 'Revision: ' && svnversion) || git svn info | sed -e 's/$$$$/M/' | grep '^Revision: ' || echo ${MALI_RELEASE_NAME}) 2>/dev/null | sed -e 's/^Revision: //')
++SVN_REV := 0000
+ 
+ ccflags-y += -DSVN_REV=$(SVN_REV)
+ ccflags-y += -DSVN_REV_STRING=\"$(SVN_REV)\"
