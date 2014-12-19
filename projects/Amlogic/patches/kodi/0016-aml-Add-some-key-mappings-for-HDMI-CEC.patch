@@ -1,12 +1,12 @@
-diff -Nru kodi-14-f4576be.orig/xbmc/input/linux/LinuxInputDevices.cpp kodi-14-f4576be/xbmc/input/linux/LinuxInputDevices.cpp
---- kodi-14-f4576be.orig/xbmc/input/linux/LinuxInputDevices.cpp	2014-12-09 22:29:42.000000000 +0300
-+++ kodi-14-f4576be/xbmc/input/linux/LinuxInputDevices.cpp	2014-12-11 19:44:31.950507522 +0300
+diff -Nru a/xbmc/input/linux/LinuxInputDevices.cpp b/xbmc/input/linux/LinuxInputDevices.cpp
+--- a/xbmc/input/linux/LinuxInputDevices.cpp	2014-12-09 22:29:42.000000000 +0300
++++ b/xbmc/input/linux/LinuxInputDevices.cpp	2014-12-11 19:44:31.950507522 +0300
 @@ -249,6 +249,12 @@
    { KEY_FASTFORWARD   , XBMCK_FASTFORWARD },
    { KEY_PRINT         , XBMCK_PRINT       },
    { KEY_QUESTION      , XBMCK_HELP        },
+   { KEY_BACK          , XBMCK_BACKSPACE   },
 +  { KEY_SELECT        , XBMCK_RETURN      },
-+  { KEY_BACK          , XBMCK_ESCAPE      },
 +  { KEY_RED           , XBMCK_TAB         },
 +  { KEY_GREEN         , XBMCK_z           },
 +  { KEY_YELLOW        , XBMCK_i           },
