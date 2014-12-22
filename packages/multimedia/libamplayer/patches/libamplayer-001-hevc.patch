@@ -45,13 +45,14 @@ diff -Nru libamplayer-75f23da.orig/amcodec/include/amports/vformat.h libamplayer
      VFORMAT_UNSUPPORT,
      VFORMAT_MAX
  } vformat_t;
-@@ -103,6 +105,9 @@
+@@ -103,6 +105,10 @@
  #define CODEC_TAG_avc1      (0x31637661)
  #define CODEC_TAG_H264      (0x34363248)
  #define CODEC_TAG_h264      (0x34363268)
 +#define CODEC_TAG_HEVC      (0x43564548)
 +#define CODEC_TAG_hvc1      (0x31637668)
 +#define CODEC_TAG_hev1      (0x31766568)
++#define CODEC_TAG_hevc1     (0x48323635)
  #define CODEC_TAG_H263      (0x33363248)
  #define CODEC_TAG_h263      (0x33363268)
  #define CODEC_TAG_s263      (0x33363273)
@@ -3786,13 +3787,14 @@ diff -Nru libamplayer-75f23da.orig/amplayer/player/player_av.c libamplayer-75f23
      case CODEC_ID_MJPEG:
          format = VFORMAT_MJPEG;
          break;
-@@ -319,6 +324,18 @@
+@@ -319,6 +324,19 @@
          dec_type = VIDEO_DEC_FORMAT_H264;
          break;
  
 +    case CODEC_TAG_HEVC:
 +    case CODEC_TAG_hev1:
 +    case CODEC_TAG_hvc1:
++    case CODEC_TAG_hevc1:
 +        log_print("VIDEO_TYPE_HEVC\n");
 +        dec_type = VIDEO_DEC_FORMAT_HEVC;
 +        break;
