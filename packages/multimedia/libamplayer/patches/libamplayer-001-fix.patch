@@ -1,0 +1,10 @@
+diff -Nru a/amcodec/Makefile b/amcodec/Makefile
+--- a/amcodec/Makefile	2014-09-08 04:33:27.000000000 +0400
++++ b/amcodec/Makefile	2014-12-18 09:52:08.016061310 +0300
+@@ -64,5 +64,5 @@
+ 	install  $(INSTALL_FLAGS)	$(TARGET)$(LIB_VERSION)$(LIB_SUB_VERSION)  $(LIB_DIR)
+ 	mkdir -p $(HEADERS_DIR)
+ 	cp	-rf $(SRC)/include/*  $(HEADERS_DIR)/
+-	-rm  $(LIB_DIR)/$(TARGET)
++	-rm  -f $(LIB_DIR)/$(TARGET)
+ 	-ln -s $(TARGET)$(LIB_VERSION)$(LIB_SUB_VERSION)  $(LIB_DIR)/$(TARGET)$(LIB_VERSION)

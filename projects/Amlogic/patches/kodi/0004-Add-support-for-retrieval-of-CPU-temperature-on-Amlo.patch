@@ -31,3 +31,13 @@ diff -Nru a/xbmc/utils/CPUInfo.cpp b/xbmc/utils/CPUInfo.cpp
    if (m_fProcTemperature == NULL)
      m_fProcTemperature = fopen("/proc/acpi/thermal_zone/THRM/temperature", "r");
    if (m_fProcTemperature == NULL)
+@@ -607,6 +607,9 @@ bool CCPUInfo::getTemperature(CTemperature& temperature)
+     if (!ret)
+     {
+       ret = fscanf(m_fProcTemperature, "%d", &value);
++      #ifndef HAS_LIBAMCODEC
++        value = value * 1000;
++      #endif
+       value = value / 1000;
+       scale = 'c';
+       ret++;

@@ -1,0 +1,72 @@
+diff --git a/drivers/net/wireless/brcm80211/brcmfmac/bcmsdh_sdmmc.c b/drivers/net/wireless/brcm80211/brcmfmac/bcmsdh_sdmmc.c
+index 0f6eb2b..51d0472 100644
+--- a/drivers/net/wireless/brcm80211/brcmfmac/bcmsdh_sdmmc.c
++++ b/drivers/net/wireless/brcm80211/brcmfmac/bcmsdh_sdmmc.c
+@@ -47,6 +47,7 @@
+ #define SDIO_DEVICE_ID_BROADCOM_4330	0x4330
+ #define SDIO_DEVICE_ID_BROADCOM_4334	0x4334
+ #define SDIO_DEVICE_ID_BROADCOM_4335	0x4335
++#define SDIO_DEVICE_ID_BROADCOM_43362	43362
+ 
+ #define SDIO_FUNC1_BLOCKSIZE		64
+ #define SDIO_FUNC2_BLOCKSIZE		512
+@@ -59,6 +60,7 @@ static const struct sdio_device_id brcmf_sdmmc_ids[] = {
+ 	{SDIO_DEVICE(SDIO_VENDOR_ID_BROADCOM, SDIO_DEVICE_ID_BROADCOM_4330)},
+ 	{SDIO_DEVICE(SDIO_VENDOR_ID_BROADCOM, SDIO_DEVICE_ID_BROADCOM_4334)},
+ 	{SDIO_DEVICE(SDIO_VENDOR_ID_BROADCOM, SDIO_DEVICE_ID_BROADCOM_4335)},
++	{SDIO_DEVICE(SDIO_VENDOR_ID_BROADCOM, SDIO_DEVICE_ID_BROADCOM_43362)},
+ 	{ /* end: all zeroes */ },
+ };
+ MODULE_DEVICE_TABLE(sdio, brcmf_sdmmc_ids);
+diff --git a/drivers/net/wireless/brcm80211/brcmfmac/dhd_sdio.c b/drivers/net/wireless/brcm80211/brcmfmac/dhd_sdio.c
+index d248751..369817e 100644
+--- a/drivers/net/wireless/brcm80211/brcmfmac/dhd_sdio.c
++++ b/drivers/net/wireless/brcm80211/brcmfmac/dhd_sdio.c
+@@ -3559,6 +3559,8 @@ static bool brcmf_sdbrcm_chipmatch(u16 chipid)
+ 		return true;
+ 	if (chipid == BCM4335_CHIP_ID)
+ 		return true;
++	if (chipid == BCM43362_CHIP_ID)
++		return true;
+ 	return false;
+ }
+ 
+diff --git a/drivers/net/wireless/brcm80211/brcmfmac/sdio_chip.c b/drivers/net/wireless/brcm80211/brcmfmac/sdio_chip.c
+index ca72177..07ca316 100644
+--- a/drivers/net/wireless/brcm80211/brcmfmac/sdio_chip.c
++++ b/drivers/net/wireless/brcm80211/brcmfmac/sdio_chip.c
+@@ -541,6 +541,23 @@ static int brcmf_sdio_chip_recognition(struct brcmf_sdio_dev *sdiodev,
+ 		ci->ramsize = 0xc0000;
+ 		ci->rambase = 0x180000;
+ 		break;
++	case BCM43362_CHIP_ID:
++		ci->c_inf[0].wrapbase = 0x18100000;
++		ci->c_inf[0].cib = 0x27004211;
++		ci->c_inf[1].id = BCMA_CORE_SDIO_DEV;
++		ci->c_inf[1].base = 0x18002000;
++		ci->c_inf[1].wrapbase = 0x18102000;
++		ci->c_inf[1].cib = 0x0a004211;
++		ci->c_inf[2].id = BCMA_CORE_ARM_CM3;
++		ci->c_inf[2].base = 0x18003000;
++		ci->c_inf[2].wrapbase = 0x18103000;
++		ci->c_inf[2].cib = 0x03004211;
++		ci->c_inf[3].id = BCMA_CORE_INTERNAL_MEM;
++		ci->c_inf[3].base = 0x18004000;
++		ci->c_inf[3].wrapbase = 0x18104000;
++		ci->c_inf[3].cib = 0x08080401;
++		ci->ramsize = 0x3c000;
++	break;
+ 	default:
+ 		brcmf_err("chipid 0x%x is not supported\n", ci->chip);
+ 		return -ENODEV;
+diff --git a/drivers/net/wireless/brcm80211/include/brcm_hw_ids.h b/drivers/net/wireless/brcm80211/include/brcm_hw_ids.h
+index c1fe245..b283751 100644
+--- a/drivers/net/wireless/brcm80211/include/brcm_hw_ids.h
++++ b/drivers/net/wireless/brcm80211/include/brcm_hw_ids.h
+@@ -41,5 +41,6 @@
+ #define BCM4331_CHIP_ID		0x4331
+ #define BCM4334_CHIP_ID		0x4334
+ #define BCM4335_CHIP_ID		0x4335
++#define BCM43362_CHIP_ID	43362
+ 
+ #endif				/* _BRCM_HW_IDS_H_ */

@@ -18,4 +18,5 @@
     <minvideocachelevel>5</minvideocachelevel>
     <minaudiocachelevel>20</minaudiocachelevel>
   </pvr>
+  <cputempcommand>echo "$(cat /sys/class/hwmon/hwmon1/temp1_input) C"</cputempcommand>
 </advancedsettings>
