@@ -69,6 +69,7 @@ makeinstall_target() {
                                 --ignore-site-config \
                                 --layout=system \
                                 --with-thread \
+                                --with-python \
                                 --with-iostreams \
                                 --with-system \
                                 --with-serialization \
