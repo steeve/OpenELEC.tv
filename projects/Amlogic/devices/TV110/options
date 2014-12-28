@@ -1,5 +1,4 @@
 # Kernel extra targets to build
-#  KERNEL_UBOOT_EXTRA_TARGET="meson8b_tv110.dtd meson8b_tv110.dtb"
   KERNEL_UBOOT_EXTRA_TARGET="meson8b_m201_1G.dtd meson8b_m201_1G.dtb"
 
 # Build Android kernel image using mkbootimg
