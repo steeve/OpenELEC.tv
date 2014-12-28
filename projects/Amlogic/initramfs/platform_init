@@ -20,18 +20,15 @@
 
 /sbin/fsck.ext4 -f -y /dev/system
 /sbin/fsck.ext4 -f -y /dev/data
-/sbin/fsck.ext4 -f -y /dev/cache
 
-# Force 720p display mode at startup
-echo 720p > /sys/class/display/mode
-
-# Enable framebuffer device
+echo 720p > /sys/class/display/mode # 1080p 1919 1079
+echo 1 > /sys/class/graphics/fb0/freescale_mode
+echo 0 0 1279 719 > /sys/class/graphics/fb0/free_scale_axis
+echo 0 0 1279 719 > /sys/class/video/axis
+echo 0 0 1279 719 > /sys/class/graphics/fb0/window_axis
 echo 0 > /sys/class/graphics/fb0/blank
+echo 1 > /sys/class/graphics/fb1/blank
 
-# Disable framebuffer scaling
-echo 0 > /sys/class/graphics/fb0/free_scale
-
-# Set framebuffer geometry
 fbset -fb /dev/fb0 -g 1280 720 1280 1440 32
 
 # Set framebuffer size in CVBS mode to match the resolution,
