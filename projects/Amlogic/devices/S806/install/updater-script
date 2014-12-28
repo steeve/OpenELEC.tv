@@ -1,13 +1,23 @@
 show_progress(0.500000, 3);
 set_bootloader_env("upgrade_step", "3");
 
-ui_print("Wiping Userdata");
-format("ext4", "EMMC", "/dev/block/data", "0", "/data");
+mount("ext4", "EMMC", "/dev/block/system", "/system");
+ifelse
+(
+  is_file_exist("system/SYSTEM") != "file_not_exit",
+  (
+    ui_print("Keeping Userdata");
+    unmount("/system");
+  ),
+  (
+    ui_print("Wiping Userdata");
+    unmount("/system");
+    format("ext4", "EMMC", "/dev/block/data", "0", "/data");
+  )
+);
 
 ui_print("Writing kernel image");
-assert(package_extract_file("KERNEL", "/tmp/boot.img"),
-    write_raw_image("/tmp/boot.img", "boot"),
-    delete("/tmp/boot.img"));
+write_raw_image(package_extract_file("KERNEL"), "boot");
 
 show_progress(0.020000, 0);
 
