@@ -26,6 +26,9 @@ case "$LINUX" in
          PKG_VERSION="amlogic-$LINUX_VERSION"
          PKG_URL="https://github.com/codesnake/linux-amlogic/releases/download/$LINUX_VERSION/$PKG_NAME-$PKG_VERSION.tar.xz"
       fi
+#    LINUX_VERSION="8031c7f"
+#    PKG_VERSION="amlogic-$LINUX_VERSION"
+#    PKG_URL="http://amlinux.ru/source/$PKG_NAME-$PKG_VERSION.tar.gz"
     ;;
   imx6)
     PKG_VERSION="cuboxi-3.14-dc5edb8"
