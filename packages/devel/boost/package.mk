@@ -64,10 +64,11 @@ make_target() {
 }
 
 makeinstall_target() {
-  $ROOT/$TOOLCHAIN/bin/bjam -d2 --toolset=gcc link=static \
+  $ROOT/$TOOLCHAIN/bin/bjam -d2 --toolset=gcc link=static threading=multi \
                                 --prefix=$SYSROOT_PREFIX/usr \
                                 --ignore-site-config \
-                                --layout=system \
+                                --with-date_time \
+                                --layout=tagged \
                                 --with-thread \
                                 --with-python \
                                 --with-iostreams \
