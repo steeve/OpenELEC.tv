@@ -18,12 +18,13 @@
 echo "sourcing libtorrent-rasterbar/package.mk: $@"
 
 PKG_NAME="libtorrent-rasterbar"
-PKG_VERSION="1.0.3"
+PKG_VERSION="0.16.19"
+#PKG_VERSION="1.0.3"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="OSS"
 PKG_SITE="http://www.boost.org/"
-PKG_URL="http://garr.dl.sourceforge.net/project/libtorrent/libtorrent/${PKG_NAME}-${PKG_VERSION}.tar.gz"
+PKG_URL="http://downloads.sourceforge.net/project/libtorrent/libtorrent/${PKG_NAME}-${PKG_VERSION}.tar.gz"
 #PKG_SOURCE_DIR="${PKG_NAME}-${PKG_VERSION}"
 PKG_DEPENDS_HOST="toolchain"
 PKG_DEPENDS_TARGET="toolchain boost Python:host Python:target zlib bzip2"
@@ -43,13 +44,20 @@ export PYTHON_SITE_PKG="$SYSROOT_PREFIX/usr/lib/python$PYTHON_VERSION/site-packa
 
 PKG_CONFIGURE_OPTS_TARGET="--with-sysroot=$SYSROOT_PREFIX \
         --with-boost-libdir=$SYSROOT_PREFIX/usr/lib \
-        --with-boost-python=mt \
-        --with-openssl=$SYSROOT_PREFIX/usr \
+        --disable-encryption \
         --prefix=/usr \
-         --enable-export-all \
+        --enable-export-all \
+        --with-boost-python=mt \
         --disable-debug \
-        --enable-python-binding"
+        --enable-python-binding \
+        --enable-static --disable-shared --disable-pool-allocators"
 echo $PKG_CONFIGURE_OPTS_TARGET
+
+pre_configure_target() {
+    sed -i 's/$PKG_CONFIG openssl --libs-only-/$PKG_CONFIG openssl --static --libs-only-/' $ROOT/$PKG_BUILD/configure
+    bjam boost=source link=static runtime-link=static boost-link=static encryption=tommath
+}
+
 post_configure_target()
 {
     cp -R $ROOT/$PKG_BUILD/bindings/python $ROOT/$PKG_BUILD/.$TARGET_NAME/bindings
