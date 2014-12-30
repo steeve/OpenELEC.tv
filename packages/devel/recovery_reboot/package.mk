@@ -39,5 +39,7 @@ makeinstall_target() {
   cp -f recoveryflash $INSTALL/sbin
   cp -f factoryreset $INSTALL/sbin
   cp -f reboot $INSTALL/sbin
+  cp -f update $INSTALL/sbin
+  chmod 777 $INSTALL/sbin/update
 
 }
