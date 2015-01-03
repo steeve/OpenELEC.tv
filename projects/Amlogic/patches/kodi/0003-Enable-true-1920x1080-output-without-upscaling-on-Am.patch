@@ -41,20 +41,17 @@ index c19124c..ee17f73 100644
    switch((int)(0.5 + res.fRefreshRate))
    {
      default:
-@@ -220,12 +229,11 @@ bool CEGLNativeTypeAmlogic::SetDisplayResolution(const char *resolution)
+@@ -219,7 +219,12 @@ bool CEGLNativeTypeAmlogic::SetDisplayResolution(const char *resolution)
+   CStdString mode = resolution;
    // switch display resolution
-   aml_set_sysfs_str("/sys/class/display/mode", modestr.c_str());
- 
--  // setup gui freescale depending on display resolution
-   DisableFreeScale();
--  if (StringUtils::StartsWith(modestr, "1080"))
--  {
--    EnableFreeScale();
--  }
+   aml_set_sysfs_str("/sys/class/display/mode", mode.c_str());
+-  SetupVideoScaling(mode.c_str());
 +
 +  RESOLUTION_INFO res;
-+  aml_mode_to_resolution(modestr, &res);
++  aml_mode_to_resolution(mode, &res);
 +  SetFramebufferResolution(res);
++
++  //SetupVideoScaling(mode.c_str());
  
    return true;
  }

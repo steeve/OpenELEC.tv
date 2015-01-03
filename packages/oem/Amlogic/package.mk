@@ -1,8 +1,6 @@
-#!/bin/sh
-
 ################################################################################
 #      This file is part of OpenELEC - http://www.openelec.tv
-#      Copyright (C) 2014 Alex Deryskyba (alex@codesnake.com)
+#      Copyright (C) 2009-2014 Stephan Raue (stephan@openelec.tv)
 #
 #  OpenELEC is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -18,13 +16,18 @@
 #  along with OpenELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-# Loading Broadcom SDIO driver on systems where the module is not present
-# will cause problems with USB Wi-Fi. S802-based boxes has either Broadcom
-# SDIO Wi-Fi module or Realtek 8188 module, so we load Broadcom driver
-# only if Realtek 8188 module is not loaded, that should be done automatically,
-# if it presents in the system
+PKG_NAME="oem"
+PKG_VERSION=""
+PKG_REV="1"
+PKG_ARCH="any"
+PKG_LICENSE="various"
+PKG_SITE="http://www.openelec.tv"
+PKG_URL=""
+PKG_DEPENDS_TARGET="toolchain slang mc unzip unrar recovery_reboot"
+PKG_PRIORITY="optional"
+PKG_SECTION="virtual"
+PKG_SHORTDESC="OEM: Metapackage for various OEM packages"
+PKG_LONGDESC="OEM: Metapackage for various OEM packages"
 
-usbmodule=$(lsusb | grep -o "0bda:0179")
-if [ "$usbmodule" != "0bda:0179" ];then
- modprobe dhd
-fi
+PKG_IS_ADDON="no"
+PKG_AUTORECONF="no"

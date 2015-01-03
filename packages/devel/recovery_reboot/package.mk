@@ -1,8 +1,6 @@
-#!/bin/sh
-
 ################################################################################
 #      This file is part of OpenELEC - http://www.openelec.tv
-#      Copyright (C) 2014 Alex Deryskyba (alex@codesnake.com)
+#      Copyright (C) 2009-2014 Stephan Raue (stephan@openelec.tv)
 #
 #  OpenELEC is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -18,13 +16,30 @@
 #  along with OpenELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-# Loading Broadcom SDIO driver on systems where the module is not present
-# will cause problems with USB Wi-Fi. S802-based boxes has either Broadcom
-# SDIO Wi-Fi module or Realtek 8188 module, so we load Broadcom driver
-# only if Realtek 8188 module is not loaded, that should be done automatically,
-# if it presents in the system
+PKG_NAME="recovery_reboot"
+PKG_VERSION="0.1"
+PKG_REV="1"
+PKG_ARCH="any"
+PKG_LICENSE="GPL"
+PKG_SITE=""
+PKG_URL="http://amlinux.ru/source/$PKG_NAME-$PKG_VERSION.tar.gz"
+PKG_DEPENDS_HOST="toolchain busybox"
+PKG_DEPENDS_TARGET="toolchain busybox"
+PKG_PRIORITY="optional"
+PKG_SECTION="system"
+PKG_SHORTDESC="reboot recovery"
+PKG_LONGDESC="reboot recovery"
 
-usbmodule=$(lsusb | grep -o "0bda:0179")
-if [ "$usbmodule" != "0bda:0179" ];then
- modprobe dhd
-fi
+PKG_IS_ADDON="no"
+PKG_AUTORECONF="no"
+
+makeinstall_target() {
+  mkdir -p $INSTALL/sbin
+  cp -f otaflash $INSTALL/sbin
+  cp -f recoveryflash $INSTALL/sbin
+  cp -f factoryreset $INSTALL/sbin
+  cp -f reboot $INSTALL/sbin
+  cp -f update $INSTALL/sbin
+  chmod 777 $INSTALL/sbin/update
+
+}
