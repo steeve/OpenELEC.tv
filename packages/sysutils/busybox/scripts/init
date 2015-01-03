@@ -47,7 +47,7 @@
   MD5_NOCHECK="0"
   SIZE_FAILED="0"
   RUN_FSCK="yes"
-  RUN_FSCK_DISKS=""
+  RUN_FSCK_DISKS=" "
 
   NBD_DEVS="0"
   FLASH_FREE_MIN="5"
@@ -56,19 +56,12 @@
   SYSTEM_TORAM_LIMIT=1024000
 
   # hide kernel log messages on console
-  echo '1 4 1 7' > /proc/sys/kernel/printk
+  # echo '1 4 1 7' > /proc/sys/kernel/printk
 
   # run platform_init script if exists
   if [ -f "./platform_init" ]; then
     ./platform_init
   fi
-<<<<<<< HEAD
-=======
-
-  # clear screen and hide cursor
-  clear
-  echo 0 > /sys/devices/virtual/graphics/fbcon/cursor_blink
->>>>>>> openelec/master
 
   # parse command line arguments
   for arg in $(cat /proc/cmdline); do
@@ -158,7 +151,7 @@
     # show cursor
     echo 0 > /sys/devices/virtual/graphics/fbcon/cursor_blink
 
-    sh </dev/tty1 >/dev/tty1 2>&1
+    exec sh
   }
 
   error() {
@@ -428,7 +421,7 @@
   check_disks() {
     if [ "$RUN_FSCK" = "yes" -a -n "$RUN_FSCK_DISKS" ]; then
       progress "Checking disk(s): $RUN_FSCK_DISKS"
-        /sbin/fsck -T -M -y $RUN_FSCK_DISKS > /dev/null 2>&1
+        /sbin/fsck -T -M -p -a $RUN_FSCK_DISKS > /dev/null 2>&1
         FSCK_RET="$?"
 
         case "$FSCK_RET" in
