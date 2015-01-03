@@ -27,7 +27,7 @@ case "$LINUX" in
     PKG_URL="$DISTRO_SRC/$PKG_NAME-$PKG_VERSION.tar.xz"
     ;;
   *)
-    PKG_VERSION="3.17.6"
+    PKG_VERSION="3.17.7"
     PKG_URL="http://www.kernel.org/pub/linux/kernel/v3.x/$PKG_NAME-$PKG_VERSION.tar.xz"
     ;;
 esac
@@ -51,22 +51,16 @@ if [ "$PERF_SUPPORT" = "yes" -a "$DEVTOOLS" = "yes" ]; then
   PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET elfutils Python"
 fi
 
-if [ "$BUILD_ANDROID_BOOTIMG" = "yes" ]; then
-  PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET mkbootimg:host"
-fi
-
 PKG_MAKE_OPTS_HOST="ARCH=$TARGET_ARCH headers_check"
 
-if [ "$BOOTLOADER" = "u-boot" -o "$LINUX" = "amlogic" ]; then
+if [ "$BOOTLOADER" = "u-boot" ]; then
   KERNEL_IMAGE="$KERNEL_UBOOT_TARGET"
 else
   KERNEL_IMAGE="bzImage"
 fi
 
 post_patch() {
-  if [ -n "$DEVICE" -a -f $PROJECT_DIR/$PROJECT/devices/$DEVICE/$PKG_NAME/$PKG_NAME.$TARGET_ARCH.conf ]; then
-    KERNEL_CFG_FILE=$PROJECT_DIR/$PROJECT/devices/$DEVICE/$PKG_NAME/$PKG_NAME.$TARGET_ARCH.conf
-  elif [ -f $PROJECT_DIR/$PROJECT/$PKG_NAME/$PKG_NAME.$TARGET_ARCH.conf ]; then
+  if [ -f $PROJECT_DIR/$PROJECT/$PKG_NAME/$PKG_NAME.$TARGET_ARCH.conf ]; then
     KERNEL_CFG_FILE=$PROJECT_DIR/$PROJECT/$PKG_NAME/$PKG_NAME.$TARGET_ARCH.conf
   else
     KERNEL_CFG_FILE=$PKG_DIR/config/$PKG_NAME.$TARGET_ARCH.conf
@@ -79,10 +73,7 @@ post_patch() {
          $PKG_BUILD/Makefile
 
   cp $KERNEL_CFG_FILE $PKG_BUILD/.config
-
-  if [ ! "$BUILD_ANDROID_BOOTIMG" = "yes" ]; then
-    sed -i -e "s|^CONFIG_INITRAMFS_SOURCE=.*$|CONFIG_INITRAMFS_SOURCE=\"$ROOT/$BUILD/image/initramfs.cpio\"|" $PKG_BUILD/.config
-  fi
+  sed -i -e "s|^CONFIG_INITRAMFS_SOURCE=.*$|CONFIG_INITRAMFS_SOURCE=\"$ROOT/$BUILD/image/initramfs.cpio\"|" $PKG_BUILD/.config
 
   # set default hostname based on $DISTRONAME
     sed -i -e "s|@DISTRONAME@|$DISTRONAME|g" $PKG_BUILD/.config
@@ -149,24 +140,13 @@ make_target() {
     $SCRIPTS/install initramfs
   )
 
-  if [ -n "$KERNEL_UBOOT_EXTRA_TARGET" ]; then
+  if [ "$BOOTLOADER" = "u-boot" -a -n "$KERNEL_UBOOT_EXTRA_TARGET" ]; then
     for extra_target in "$KERNEL_UBOOT_EXTRA_TARGET"; do
       LDFLAGS="" make $extra_target
     done
   fi
 
-  if [ "$MULTI_DTBS" = "yes" ]; then
-    mkdir -p out
-    $ROOT/projects/$PROJECT/dtbTool -o out/dt.img -p scripts/dtc/ arch/arm/boot/dts/amlogic/
-  fi
-
   LDFLAGS="" make $KERNEL_IMAGE $KERNEL_MAKE_EXTRACMD
-
-  if [ "$BUILD_ANDROID_BOOTIMG" = "yes" ]; then
-    LDFLAGS="" ./mkbootimg --kernel arch/arm/boot/$KERNEL_IMAGE --ramdisk $ROOT/$BUILD/image/initramfs.cpio \
-      --second "$ANDROID_BOOTIMG_SECOND" --output arch/arm/boot/boot.img
-    mv -f arch/arm/boot/boot.img arch/arm/boot/$KERNEL_IMAGE
-  fi
 
   if [ "$PERF_SUPPORT" = "yes" -a "$DEVTOOLS" = "yes" ]; then
     ( cd tools/perf
@@ -197,10 +177,10 @@ make_target() {
 }
 
 makeinstall_target() {
-  if [ "$BOOTLOADER" = "u-boot" -a -f "arch/arm/boot/dts/*.dtb" ]; then
+  if [ "$BOOTLOADER" = "u-boot" ]; then
     mkdir -p $INSTALL/usr/share/bootloader
     for dtb in arch/arm/boot/dts/*.dtb; do
-      cp $dtb $INSTALL/usr/share/bootloader
+      cp $dtb $INSTALL/usr/share/bootloader 2>/dev/null || :
     done
   fi
 

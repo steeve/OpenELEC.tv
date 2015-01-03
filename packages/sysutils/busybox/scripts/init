@@ -62,6 +62,13 @@
   if [ -f "./platform_init" ]; then
     ./platform_init
   fi
+<<<<<<< HEAD
+=======
+
+  # clear screen and hide cursor
+  clear
+  echo 0 > /sys/devices/virtual/graphics/fbcon/cursor_blink
+>>>>>>> openelec/master
 
   # parse command line arguments
   for arg in $(cat /proc/cmdline); do
