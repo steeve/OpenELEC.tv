@@ -16,21 +16,22 @@
 #  along with OpenELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-PKG_NAME="vdr-satip"
-PKG_VERSION="1.0.0"
+PKG_NAME="vdr-plugin-epgfixer"
+PKG_VERSION="1ad4aaf"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
-PKG_SITE="http://www.saunalahti.fi/~rahrenbe/vdr/satip/"
-PKG_URL="http://www.saunalahti.fi/~rahrenbe/vdr/satip/files/$PKG_NAME-$PKG_VERSION.tgz"
-PKG_SOURCE_DIR="satip-${PKG_VERSION}"
-PKG_DEPENDS_TARGET="toolchain vdr curl tinyxml"
+PKG_SITE="http://projects.vdr-developer.org/projects/plg-epgfixer"
+#PKG_URL="$DISTRO_SRC/$PKG_NAME-$PKG_VERSION.tar.xz"
+PKG_URL="http://projects.vdr-developer.org/git/vdr-plugin-epgfixer.git/snapshot/vdr-plugin-epgfixer-$PKG_VERSION.tar.gz"
+PKG_DEPENDS_TARGET="toolchain vdr pcre"
 PKG_PRIORITY="optional"
 PKG_SECTION="multimedia"
-PKG_SHORTDESC="vdr-satip: SAT>IP plugin for VDR"
-PKG_LONGDESC="vdr-satip is a SAT>IP plugin for VDR"
+PKG_SHORTDESC="vdr-plugin-epgfixer"
+PKG_LONGDESC="Plugin for modifying EPG data using regular expressions."
 
 PKG_IS_ADDON="no"
+
 PKG_AUTORECONF="no"
 
 pre_configure_target() {
@@ -42,7 +43,6 @@ pre_configure_target() {
 make_target() {
   VDR_DIR=$(get_build_dir vdr)
   make VDRDIR=$VDR_DIR \
-    SATIP_USE_TINYXML=1 \
     LIBDIR="." \
     LOCALEDIR="./locale"
 }
