@@ -359,7 +359,7 @@ IMAGE_NAME="$DISTRONAME-$TARGET_VERSION"
           echo "Creating Amlogic ZIP auto-install package"
           pushd sign > /dev/null
           echo --update_package=/sdcard/$IMAGE_NAME-update.zip > factory_update_param.aml
-          if [ "$DEVICE" = "S806" ]; then
+          if [ "$DEVICE" = "S806-S812" -o "$DEVICE" = "S806-S802" ]; then
              echo --update_package=/udisk/$IMAGE_NAME-update.zip > factory_update_param.aml
           fi
           echo --wipe_cache >>  factory_update_param.aml
