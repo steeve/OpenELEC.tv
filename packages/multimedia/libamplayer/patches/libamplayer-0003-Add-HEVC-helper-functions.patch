@@ -1,0 +1,259 @@
+From 0420c22c0ad6fc79ebc210da3e9ec3313156cde4 Mon Sep 17 00:00:00 2001
+From: Stanislav Vlasic <svlasic@gmail.com>
+Date: Fri, 9 Jan 2015 12:08:42 +0100
+Subject: [PATCH 3/4] Add HEVC helper functions
+
+---
+ amcodec/include/amports/vformat.h       |  5 +-
+ amffmpeg/libavcodec/golomb.h            | 14 ++++++
+ amffmpeg/libavutil/mem.c                | 31 +++++++++++++
+ amffmpeg/libavutil/mem.h                | 82 ++++++++++++++++++++++++++++++++-
+ amffmpeg/libavutil/pixdesc.c            |  7 +++
+ amffmpeg/libavutil/pixdesc.h            |  6 +++
+ amplayer/player/include/stream_format.h |  4 +-
+ 7 files changed, 145 insertions(+), 4 deletions(-)
+
+diff --git a/amcodec/include/amports/vformat.h b/amcodec/include/amports/vformat.h
+index a86a0a5..08de5d1 100755
+--- a/amcodec/include/amports/vformat.h
++++ b/amcodec/include/amports/vformat.h
+@@ -103,9 +103,11 @@ typedef enum {
+ #define CODEC_TAG_mp4v      (0x7634706d)
+ #define CODEC_TAG_AVC1      (0x31435641)
+ #define CODEC_TAG_avc1      (0x31637661)
+-#define CODEC_TAG_hvc1      (0x31637668)
+ #define CODEC_TAG_H264      (0x34363248)
+ #define CODEC_TAG_h264      (0x34363268)
++#define CODEC_TAG_HEVC      (0x43564548)
++#define CODEC_TAG_hvc1      (0x31637668)
++#define CODEC_TAG_hev1      (0x31766568)
+ #define CODEC_TAG_H263      (0x33363248)
+ #define CODEC_TAG_h263      (0x33363268)
+ #define CODEC_TAG_s263      (0x33363273)
+@@ -117,5 +119,6 @@ typedef enum {
+ #define CODEC_TAG_WMVA      (0x41564d57)
+ #define CODEC_TAG_FMP4      (0x34504d46)
+ #define CODEC_TAG_FVFW      (0x57465646)
++#define CODEC_TAG_VC_1      (0x312d4356)
+ 
+ #endif /* VFORMAT_H */
+diff --git a/amffmpeg/libavcodec/golomb.h b/amffmpeg/libavcodec/golomb.h
+index 90eeb30..8e01706 100644
+--- a/amffmpeg/libavcodec/golomb.h
++++ b/amffmpeg/libavcodec/golomb.h
+@@ -93,6 +93,20 @@ static inline int get_ue_golomb_31(GetBitContext *gb){
+     return ff_ue_golomb_vlc_code[buf];
+ }
+ 
++/**
++ * Read an unsigned Exp-Golomb code in the range 0 to UINT32_MAX-1.
++ */
++static inline unsigned get_ue_golomb_long(GetBitContext *gb)
++{
++    unsigned buf, log;
++
++    buf = show_bits_long(gb, 32);
++    log = 31 - av_log2(buf);
++    skip_bits_long(gb, log);
++
++    return get_bits_long(gb, log + 1) - 1;
++}
++
+ static inline int svq3_get_ue_golomb(GetBitContext *gb){
+     uint32_t buf;
+ 
+diff --git a/amffmpeg/libavutil/mem.c b/amffmpeg/libavutil/mem.c
+index 87c2008..6b6cb61 100755
+--- a/amffmpeg/libavutil/mem.c
++++ b/amffmpeg/libavutil/mem.c
+@@ -200,3 +200,34 @@ void av_dynarray_add(void *tab_ptr, int *nb_ptr, void *elem)
+     tab[nb++] = (intptr_t)elem;
+     *nb_ptr = nb;
+ }
++
++void *av_realloc_f(void *ptr, size_t nelem, size_t elsize)
++{
++    size_t size;
++    void *r;
++
++    if (av_size_mult(elsize, nelem, &size)) {
++        av_free(ptr);
++        return NULL;
++    }
++    r = av_realloc(ptr, size);
++    if (!r && size)
++        av_free(ptr);
++    return r;
++}
++
++void *av_realloc_array(void *ptr, size_t nmemb, size_t size)
++{
++    if (!size || nmemb >= INT_MAX / size)
++        return NULL;
++    return av_realloc(ptr, nmemb * size);
++}
++
++int av_reallocp_array(void *ptr, size_t nmemb, size_t size)
++{
++    void **ptrptr = ptr;
++    *ptrptr = av_realloc_f(*ptrptr, nmemb, size);
++    if (!*ptrptr && nmemb && size)
++        return AVERROR(ENOMEM);
++    return 0;
++}
+diff --git a/amffmpeg/libavutil/mem.h b/amffmpeg/libavutil/mem.h
+index 7c30e16..4a8eacc 100644
+--- a/amffmpeg/libavutil/mem.h
++++ b/amffmpeg/libavutil/mem.h
+@@ -57,9 +57,9 @@
+ #endif
+ 
+ #if AV_GCC_VERSION_AT_LEAST(4,3)
+-    #define av_alloc_size(n) __attribute__((alloc_size(n)))
++    #define av_alloc_size(...) __attribute__((alloc_size(__VA_ARGS__)))
+ #else
+-    #define av_alloc_size(n)
++    #define av_alloc_size(...)
+ #endif
+ 
+ /**
+@@ -87,6 +87,69 @@ void *av_malloc(size_t size) av_malloc_attrib av_alloc_size(1);
+ void *av_realloc(void *ptr, size_t size) av_alloc_size(2);
+ 
+ /**
++ * Allocate a block of size * nmemb bytes with av_malloc().
++ * @param nmemb Number of elements
++ * @param size Size of the single element
++ * @return Pointer to the allocated block, NULL if the block cannot
++ * be allocated.
++ * @see av_malloc()
++ */
++av_alloc_size(1, 2) static inline void *av_malloc_array(size_t nmemb, size_t size)
++{
++    if (!size || nmemb >= INT_MAX / size)
++        return NULL;
++    return av_malloc(nmemb * size);
++}
++
++/**
++ * Allocate or reallocate a block of memory.
++ * This function does the same thing as av_realloc, except:
++ * - It takes two arguments and checks the result of the multiplication for
++ *   integer overflow.
++ * - It frees the input block in case of failure, thus avoiding the memory
++ *   leak with the classic "buf = realloc(buf); if (!buf) return -1;".
++ */
++void *av_realloc_f(void *ptr, size_t nelem, size_t elsize);
++
++/**
++ * Allocate or reallocate an array.
++ * If ptr is NULL and nmemb > 0, allocate a new block. If
++ * nmemb is zero, free the memory block pointed to by ptr.
++ * @param ptr Pointer to a memory block already allocated with
++ * av_realloc() or NULL.
++ * @param nmemb Number of elements
++ * @param size Size of the single element
++ * @return Pointer to a newly-reallocated block or NULL if the block
++ * cannot be reallocated or the function is used to free the memory block.
++ * @warning Pointers originating from the av_malloc() family of functions must
++ *          not be passed to av_realloc(). The former can be implemented using
++ *          memalign() (or other functions), and there is no guarantee that
++ *          pointers from such functions can be passed to realloc() at all.
++ *          The situation is undefined according to POSIX and may crash with
++ *          some libc implementations.
++ */
++av_alloc_size(2, 3) void *av_realloc_array(void *ptr, size_t nmemb, size_t size);
++
++/**
++ * Allocate or reallocate an array through a pointer to a pointer.
++ * If *ptr is NULL and nmemb > 0, allocate a new block. If
++ * nmemb is zero, free the memory block pointed to by ptr.
++ * @param ptr Pointer to a pointer to a memory block already allocated
++ * with av_realloc(), or pointer to a pointer to NULL.
++ * The pointer is updated on success, or freed on failure.
++ * @param nmemb Number of elements
++ * @param size Size of the single element
++ * @return Zero on success, an AVERROR error code on failure.
++ * @warning Pointers originating from the av_malloc() family of functions must
++ *          not be passed to av_realloc(). The former can be implemented using
++ *          memalign() (or other functions), and there is no guarantee that
++ *          pointers from such functions can be passed to realloc() at all.
++ *          The situation is undefined according to POSIX and may crash with
++ *          some libc implementations.
++ */
++av_alloc_size(2, 3) int av_reallocp_array(void *ptr, size_t nmemb, size_t size);
++
++/**
+  * Free a memory block which has been allocated with av_malloc(z)() or
+  * av_realloc().
+  * @param ptr Pointer to the memory block which should be freed.
+@@ -132,4 +195,19 @@ void av_freep(void *ptr);
+  */
+ void av_dynarray_add(void *tab_ptr, int *nb_ptr, void *elem);
+ 
++/**
++ * Multiply two size_t values checking for overflow.
++ * @return  0 if success, AVERROR(EINVAL) if overflow.
++ */
++static inline int av_size_mult(size_t a, size_t b, size_t *r)
++{
++    size_t t = a * b;
++    /* Hack inspired from glibc: only try the division if nelem and elsize
++     * are both greater than sqrt(SIZE_MAX). */
++    if ((a | b) >= ((size_t)1 << (sizeof(size_t) * 4)) && a && t / a != b)
++        return -1;
++    *r = t;
++    return 0;
++}
++
+ #endif /* AVUTIL_MEM_H */
+diff --git a/amffmpeg/libavutil/pixdesc.c b/amffmpeg/libavutil/pixdesc.c
+index 491955a..de2a900 100644
+--- a/amffmpeg/libavutil/pixdesc.c
++++ b/amffmpeg/libavutil/pixdesc.c
+@@ -1009,3 +1009,10 @@ char *av_get_pix_fmt_string (char *buf, int buf_size, enum PixelFormat pix_fmt)
+ 
+     return buf;
+ }
++
++const AVPixFmtDescriptor *av_pix_fmt_desc_get(enum PixelFormat pix_fmt)
++{
++    if (pix_fmt < 0 || pix_fmt >= PIX_FMT_NB)
++        return NULL;
++    return &av_pix_fmt_descriptors[pix_fmt];
++}
+diff --git a/amffmpeg/libavutil/pixdesc.h b/amffmpeg/libavutil/pixdesc.h
+index f0de998..31dd356 100644
+--- a/amffmpeg/libavutil/pixdesc.h
++++ b/amffmpeg/libavutil/pixdesc.h
+@@ -151,6 +151,12 @@ enum PixelFormat av_get_pix_fmt(const char *name);
+ const char *av_get_pix_fmt_name(enum PixelFormat pix_fmt);
+ 
+ /**
++ * @return a pixel format descriptor for provided pixel format or NULL if
++ * this pixel format is unknown.
++ */
++const AVPixFmtDescriptor *av_pix_fmt_desc_get(enum PixelFormat pix_fmt);
++
++/**
+  * Print in buf the string corresponding to the pixel format with
+  * number pix_fmt, or an header if pix_fmt is negative.
+  *
+diff --git a/amplayer/player/include/stream_format.h b/amplayer/player/include/stream_format.h
+index 91acd27..eacdfe6 100755
+--- a/amplayer/player/include/stream_format.h
++++ b/amplayer/player/include/stream_format.h
+@@ -40,7 +40,9 @@ typedef enum
+     AMR_FILE        = 20,
+     AVS_FILE		= 21, 
+     PMP_FILE		= 22, 
+-    FILE_MAX		= 23,        
++    OGM_FILE        = 23,
++    HEVC_FILE       = 24,
++    FILE_MAX,     
+ }pfile_type;
+ 
+ #endif
+-- 
+1.9.1
+
