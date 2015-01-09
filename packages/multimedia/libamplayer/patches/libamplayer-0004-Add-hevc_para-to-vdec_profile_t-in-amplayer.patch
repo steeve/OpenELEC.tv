@@ -1,0 +1,36 @@
+From 0fc5947796cb85be51a9db4baadc45880e632fcd Mon Sep 17 00:00:00 2001
+From: Stanislav Vlasic <svlasic@gmail.com>
+Date: Fri, 24 Oct 2014 23:27:21 +0200
+Subject: [PATCH 4/4] Add hevc_para to vdec_profile_t in amplayer
+
+---
+ amplayer/player/player_profile.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/amplayer/player/player_profile.h b/amplayer/player/player_profile.h
+index 7980b6b..e2cd17f 100755
+--- a/amplayer/player/player_profile.h
++++ b/amplayer/player/player_profile.h
+@@ -10,6 +10,11 @@ typedef struct {
+ } sys_h264_profile_t;
+ 
+ typedef struct {
++    int exist;
++    int support4k;
++} sys_hevc_profile_t;
++
++typedef struct {
+     int progressive_enable;
+     int interlace_enable;
+     int wmv1_enable;
+@@ -44,6 +49,7 @@ typedef struct {
+ 
+ typedef struct _system_para_ {
+     sys_h264_profile_t      h264_para;
++    sys_hevc_profile_t      hevc_para;
+     sys_vc1_profile_t       vc1_para;
+     sys_real_profile_t      real_para;
+     sys_mpeg12_profile_t    mpeg12_para;
+-- 
+1.9.1
+
