@@ -1,3 +1,6 @@
+# Optimize for Cortex-A5
+  TARGET_CPU="cortex-a5"
+
 # Kernel extra targets to build
   KERNEL_UBOOT_EXTRA_TARGET="meson8b_tv110.dtd meson8b_tv110.dtb"
 
