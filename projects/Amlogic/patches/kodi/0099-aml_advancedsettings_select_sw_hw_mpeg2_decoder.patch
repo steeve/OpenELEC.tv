@@ -13,7 +13,7 @@ diff -Nru kodi-14-f4576be.orig/xbmc/cores/dvdplayer/DVDCodecs/Video/DVDVideoCode
      case AV_CODEC_ID_MPEG1VIDEO:
      case AV_CODEC_ID_MPEG2VIDEO:
      case AV_CODEC_ID_MPEG2VIDEO_XVMC:
-+       if (g_advancedSettings.m_AMLcodecUseMpeg2codec != 0)
++       if (g_advancedSettings.m_AMLcodecUseMpeg2codec != 0 && m_hints.width < 1280)
 +         {
 +           CLog::Log(LOGDEBUG, "use SW decoding for MPEG2 codec");
 +           return false;
