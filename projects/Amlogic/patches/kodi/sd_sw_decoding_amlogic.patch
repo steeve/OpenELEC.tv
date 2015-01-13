@@ -1,0 +1,243 @@
+diff --git a/language/English/strings.po b/language/English/strings.po
+index 15090fc..a95036b 100755
+--- a/language/English/strings.po
++++ b/language/English/strings.po
+@@ -16116,3 +16116,33 @@ msgstr ""
+ msgctxt "#38010"
+ msgid "GPU accelerated"
+ msgstr ""
++
++#: system/settings/settings.xml
++msgctxt "#60001"
++msgid "Use software decoding for MPEG2 (SD) video content"
++msgstr ""
++
++#: system/settings/settings.xml
++msgctxt "#60002"
++msgid "Use software decoding for H.264 (SD) video content"
++msgstr ""
++
++#: system/settings/settings.xml
++msgctxt "#60003"
++msgid "Use software decoding for MPEG4 (SD) video content"
++msgstr ""
++
++#: system/settings/settings.xml
++msgctxt "#60004"
++msgid "Use software decoding for VC1 video content"
++msgstr ""
++
++#: system/settings/settings.xml
++msgctxt "#60005"
++msgid "Use software decoding for WMV3 video content"
++msgstr ""
++
++#: system/settings/settings.xml
++msgctxt "#60006"
++msgid "Use software decoding for AVS video content"
++msgstr ""
+diff --git a/language/Russian/strings.po b/language/Russian/strings.po
+index fd5f2a8..fbd0c06 100644
+--- a/language/Russian/strings.po
++++ b/language/Russian/strings.po
+@@ -13080,3 +13080,33 @@ msgstr "Метод открытия/воспроизведения дисков
+ msgctxt "#38010"
+ msgid "GPU accelerated"
+ msgstr "Ускорение при помощи видеокарты"
++
++#: system/settings/settings.xml
++msgctxt "#60001"
++msgid "Use software decoding for MPEG2 (SD) video content"
++msgstr "Использовать програмное декодирование для MPEG2 (SD) видео"
++
++#: system/settings/settings.xml
++msgctxt "#60002"
++msgid "Use software decoding for H.264 (SD) video content"
++msgstr "Использовать програмное декодирование для H.264 (SD) видео"
++
++#: system/settings/settings.xml
++msgctxt "#60003"
++msgid "Use software decoding for MPEG4 (SD) video content"
++msgstr "Использовать програмное декодирование для MPEG4 (SD) видео"
++
++#: system/settings/settings.xml
++msgctxt "#60004"
++msgid "Use software decoding for VC1 video content"
++msgstr "Использовать програмное декодирование для VC видео"
++
++#: system/settings/settings.xml
++msgctxt "#60005"
++msgid "Use software decoding for WMV3 video content"
++msgstr "Использовать програмное декодирование для WMV видео"
++
++#: system/settings/settings.xml
++msgctxt "#60006"
++msgid "Use software decoding for AVS video content"
++msgstr "Использовать програмное декодирование для AVS видео"
+diff --git a/system/settings/settings.xml b/system/settings/settings.xml
+index 367542d..f293c87 100644
+--- a/system/settings/settings.xml
++++ b/system/settings/settings.xml
+@@ -600,6 +600,78 @@
+           </updates>
+           <control type="toggle" />
+         </setting>
++        <setting id="videoplayer.useswdecodingformpeg2sd" type="boolean" label="60001">
++          <requirement>HAVE_AMCODEC</requirement>
++          <dependencies>
++            <dependency type="enable" setting="videoplayer.decodingmethod" operator="is">1</dependency>
++          </dependencies>
++          <level>3</level>
++          <default>false</default>
++          <updates>
++            <update type="change" />
++          </updates>
++          <control type="toggle" />
++        </setting>
++        <setting id="videoplayer.useswdecodingforh264sd" type="boolean" label="60002">
++          <requirement>HAVE_AMCODEC</requirement>
++          <dependencies>
++            <dependency type="enable" setting="videoplayer.decodingmethod" operator="is">1</dependency>
++          </dependencies>
++          <level>3</level>
++          <default>false</default>
++          <updates>
++            <update type="change" />
++          </updates>
++          <control type="toggle" />
++        </setting>
++        <setting id="videoplayer.useswdecodingformpeg4sd" type="boolean" label="60003">
++          <requirement>HAVE_AMCODEC</requirement>
++          <dependencies>
++            <dependency type="enable" setting="videoplayer.decodingmethod" operator="is">1</dependency>
++          </dependencies>
++          <level>3</level>
++          <default>false</default>
++          <updates>
++            <update type="change" />
++          </updates>
++          <control type="toggle" />
++        </setting>
++        <setting id="videoplayer.useswdecodingforvc1sd" type="boolean" label="60004">
++          <requirement>HAVE_AMCODEC</requirement>
++          <dependencies>
++            <dependency type="enable" setting="videoplayer.decodingmethod" operator="is">1</dependency>
++          </dependencies>
++          <level>3</level>
++          <default>false</default>
++          <updates>
++            <update type="change" />
++          </updates>
++          <control type="toggle" />
++        </setting>
++        <setting id="videoplayer.useswdecodingforwmv3sd" type="boolean" label="60005">
++          <requirement>HAVE_AMCODEC</requirement>
++          <dependencies>
++            <dependency type="enable" setting="videoplayer.decodingmethod" operator="is">1</dependency>
++          </dependencies>
++          <level>3</level>
++          <default>false</default>
++          <updates>
++            <update type="change" />
++          </updates>
++          <control type="toggle" />
++        </setting>
++        <setting id="videoplayer.useswdecodingforavssd" type="boolean" label="60006">
++          <requirement>HAVE_AMCODEC</requirement>
++          <dependencies>
++            <dependency type="enable" setting="videoplayer.decodingmethod" operator="is">1</dependency>
++          </dependencies>
++          <level>3</level>
++          <default>false</default>
++          <updates>
++            <update type="change" />
++          </updates>
++          <control type="toggle" />
++        </setting>
+         <setting id="videoplayer.usevdpau" type="boolean" label="13425" help="36155">
+           <requirement>HAVE_LIBVDPAU</requirement>
+           <dependencies>
+diff --git a/xbmc/cores/dvdplayer/DVDCodecs/Video/DVDVideoCodecAmlogic.cpp b/xbmc/cores/dvdplayer/DVDCodecs/Video/DVDVideoCodecAmlogic.cpp
+index 24c1ab9..325004b 100644
+--- a/xbmc/cores/dvdplayer/DVDCodecs/Video/DVDVideoCodecAmlogic.cpp
++++ b/xbmc/cores/dvdplayer/DVDCodecs/Video/DVDVideoCodecAmlogic.cpp
+@@ -26,6 +26,8 @@
+ #include "AMLCodec.h"
+ #include "utils/BitstreamConverter.h"
+ #include "utils/log.h"
++#include "settings/Settings.h"
++#include "settings/VideoSettings.h"
+ 
+ #define __MODULE_NAME__ "DVDVideoCodecAmlogic"
+ 
+@@ -69,6 +71,12 @@ bool CDVDVideoCodecAmlogic::Open(CDVDStreamInfo &hints, CDVDCodecOptions &option
+     case AV_CODEC_ID_MPEG1VIDEO:
+     case AV_CODEC_ID_MPEG2VIDEO:
+     case AV_CODEC_ID_MPEG2VIDEO_XVMC:
++     if ((EDECODEMETHOD)CSettings::Get().GetInt("videoplayer.decodingmethod") == VS_DECODEMETHOD_HARDWARE && CSettings::Get().GetBool("videoplayer.useswdecodingformpeg2sd") && m_hints.width < 1280)
++     {
++       CLog::Log(LOGDEBUG, "use SW decoding for MPEG2 codec");
++        return false;
++        break;
++      }
+       m_mpeg2_sequence_pts = 0;
+       m_mpeg2_sequence = new mpeg2_sequence;
+       m_mpeg2_sequence->width  = m_hints.width;
+@@ -83,6 +91,12 @@ bool CDVDVideoCodecAmlogic::Open(CDVDStreamInfo &hints, CDVDCodecOptions &option
+       m_pFormatName = "am-mpeg2";
+       break;
+     case AV_CODEC_ID_H264:
++     if ((EDECODEMETHOD)CSettings::Get().GetInt("videoplayer.decodingmethod") == VS_DECODEMETHOD_HARDWARE && CSettings::Get().GetBool("videoplayer.useswdecodingforhs64sd") && m_hints.width < 1280)
++     {
++       CLog::Log(LOGDEBUG, "use SW decoding for H.264 codec");
++        return false;
++        break;
++      }
+       m_pFormatName = "am-h264";
+       // convert h264-avcC to h264-annex-b as h264-avcC
+       // under streamers can have issues when seeking.
+@@ -102,6 +116,12 @@ bool CDVDVideoCodecAmlogic::Open(CDVDStreamInfo &hints, CDVDCodecOptions &option
+     case AV_CODEC_ID_MPEG4:
+     case AV_CODEC_ID_MSMPEG4V2:
+     case AV_CODEC_ID_MSMPEG4V3:
++     if ((EDECODEMETHOD)CSettings::Get().GetInt("videoplayer.decodingmethod") == VS_DECODEMETHOD_HARDWARE && CSettings::Get().GetBool("videoplayer.useswdecodingformpeg4sd") && m_hints.width < 1280)
++     {
++       CLog::Log(LOGDEBUG, "use SW decoding for MPEG4 codec");
++        return false;
++        break;
++      }
+       m_pFormatName = "am-mpeg4";
+       break;
+     case AV_CODEC_ID_H263:
+@@ -122,13 +142,31 @@ bool CDVDVideoCodecAmlogic::Open(CDVDStreamInfo &hints, CDVDCodecOptions &option
+       return false;
+       break;
+     case AV_CODEC_ID_VC1:
++     if ((EDECODEMETHOD)CSettings::Get().GetInt("videoplayer.decodingmethod") == VS_DECODEMETHOD_HARDWARE && CSettings::Get().GetBool("videoplayer.useswdecodingforvc1sd") && m_hints.width < 1280)
++     {
++       CLog::Log(LOGDEBUG, "use SW decoding for VC1 codec");
++        return false;
++        break;
++      }
+       m_pFormatName = "am-vc1";
+       break;
+     case AV_CODEC_ID_WMV3:
++     if ((EDECODEMETHOD)CSettings::Get().GetInt("videoplayer.decodingmethod") == VS_DECODEMETHOD_HARDWARE && CSettings::Get().GetBool("videoplayer.useswdecodingforwmv3sd") && m_hints.width < 1280)
++     {
++       CLog::Log(LOGDEBUG, "use SW decoding for WMV3 codec");
++        return false;
++        break;
++      }
+       m_pFormatName = "am-wmv3";
+       break;
+     case AV_CODEC_ID_AVS:
+     case AV_CODEC_ID_CAVS:
++     if ((EDECODEMETHOD)CSettings::Get().GetInt("videoplayer.decodingmethod") == VS_DECODEMETHOD_HARDWARE && CSettings::Get().GetBool("videoplayer.useswdecodingforavssd") && m_hints.width < 1280)
++     {
++       CLog::Log(LOGDEBUG, "use SW decoding for AVS codec");
++        return false;
++        break;
++      }
+       m_pFormatName = "am-avs";
+       break;
+     default:
