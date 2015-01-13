@@ -1,0 +1,15 @@
+diff --git a/xbmc/cores/dvdplayer/DVDCodecs/Video/DVDVideoCodecAmlogic.cpp b/xbmc/cores/dvdplayer/DVDCodecs/Video/DVDVideoCodecAmlogic.cpp
+index 27a3ec2..9fba862 100644
+--- a/xbmc/cores/dvdplayer/DVDCodecs/Video/DVDVideoCodecAmlogic.cpp
++++ b/xbmc/cores/dvdplayer/DVDCodecs/Video/DVDVideoCodecAmlogic.cpp
+@@ -137,7 +137,9 @@ bool CDVDVideoCodecAmlogic::Open(CDVDStreamInfo &hints, CDVDCodecOptions &option
+       m_pFormatName = "am-vc1";
+       break;
+     case AV_CODEC_ID_WMV3:
+-      m_pFormatName = "am-wmv3";
++      // m_pFormatName = "am-wmv3";
++      /// wmv is not handled well by amcodec
++      return false;
+       break;
+     case AV_CODEC_ID_AVS:
+     case AV_CODEC_ID_CAVS:
