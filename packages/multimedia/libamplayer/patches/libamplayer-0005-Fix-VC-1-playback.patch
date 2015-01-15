@@ -1,0 +1,32 @@
+From fa5e7abf07d4576d23c5264a954a02699fe00524 Mon Sep 17 00:00:00 2001
+From: kszaq <kszaquitto@gmail.com>
+Date: Fri, 16 Jan 2015 00:34:45 +0100
+Subject: [PATCH] Fix VC-1 playback
+
+---
+ amcodec/include/amports/vformat.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/amcodec/include/amports/vformat.h b/amcodec/include/amports/vformat.h
+index 08de5d1..3d1fca2 100755
+--- a/amcodec/include/amports/vformat.h
++++ b/amcodec/include/amports/vformat.h
+@@ -40,7 +40,6 @@ typedef enum {
+     VIDEO_DEC_FORMAT_MPEG4_4,
+     VIDEO_DEC_FORMAT_MPEG4_5,
+     VIDEO_DEC_FORMAT_H264,
+-    VIDEO_DEC_FORMAT_HEVC,
+     VIDEO_DEC_FORMAT_MJPEG,
+     VIDEO_DEC_FORMAT_MP4,
+     VIDEO_DEC_FORMAT_H263,
+@@ -51,6 +50,7 @@ typedef enum {
+     VIDEO_DEC_FORMAT_SW,
+     VIDEO_DEC_FORMAT_AVS,
+     VIDEO_DEC_FORMAT_H264_4K2K,
++    VIDEO_DEC_FORMAT_HEVC,
+     VIDEO_DEC_FORMAT_MAX
+ } vdec_type_t;
+ 
+-- 
+1.9.1
+
