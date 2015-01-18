@@ -8,6 +8,27 @@
         </setting>
       </group>
     </category>
+    <category id="powermanagement">
+      <group id="2">
+        <setting id="powermanagement.wakeonaccess">
+          <level>1</level>
+          <default>false</default>
+          <control type="toggle" />
+        </setting>
+      </group>
+    </category>
+  </section>
+
+  <section id="appearance">
+    <category id="lookandfeel">
+      <group id="2">
+        <setting id="lookandfeel.enablerssfeeds">
+          <level>1</level>
+          <default>false</default>
+          <control type="toggle" />
+        </setting>
+      </group>
+    </category>
   </section>
 
   <section id="services">
