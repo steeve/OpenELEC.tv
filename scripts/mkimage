@@ -224,7 +224,10 @@ EOF
     cp $RELEASE_DIR/3rdparty/bootloader/start.elf "$OE_TMP"
     cp $RELEASE_DIR/3rdparty/bootloader/config.txt "$OE_TMP"
 elif [ "$BOOTLOADER" = "u-boot" ]; then
+<<<<<<< HEAD
 
+=======
+>>>>>>> codesnake/master
   # create bootloader configuration
     echo "image: creating bootloader configuration..."
     if [ -f "$RELEASE_DIR/3rdparty/bootloader/uEnv.txt" ]; then
@@ -252,7 +255,10 @@ elif [ "$BOOTLOADER" = "u-boot" ]; then
         cp "$dtb" "$OE_TMP"
       fi
     done
+<<<<<<< HEAD
 
+=======
+>>>>>>> codesnake/master
 fi # bootloader
 
 # unmount part1
