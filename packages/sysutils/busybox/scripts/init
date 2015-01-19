@@ -507,11 +507,6 @@
   check_update() {
     progress "Checking for updates"
 
-    # check for ATV1 mach-o-kernel
-    if [ -f "/flash/com.apple.Boot.plist" -a -f "/flash/boot.efi" ]; then
-      UPDATE_KERNEL="MACH_KERNEL"
-    fi
-
     UPDATE_TAR=`ls -1 "$UPDATE_DIR"/*.tar 2>/dev/null | head -n 1`
     if [ -f "$UPDATE_DIR/$UPDATE_KERNEL" -a -f "$UPDATE_DIR/$UPDATE_SYSTEM" -o -f "$UPDATE_TAR" ] ; then
       if [ "$UPDATE_DISABLED" = "yes" ] ; then
@@ -678,25 +673,20 @@
 
   BOOT_STEP=final
 
-  # no suspend when booted from nonpersistent storage
+  # log if booting from usb / removable storage
   STORAGE=$(cat /proc/mounts | grep " /sysroot/storage " | awk '{print $1}' | awk -F '/' '{print $3}')
-  if [ -n "$STORAGE" ] ; then
-    removable="/sys/class/block/*/$STORAGE/../removable"
-    if [ -e $removable ] ; then
-      if [ "$(cat $removable 2>/dev/null)" = "1" ] ; then
-        SUSPEND_DISABLED=yes
-      fi
-    fi
-  fi
   FLASH=$(cat /proc/mounts | grep " /sysroot/flash " | awk '{print $1}' | awk -F '/' '{print $3}')
-  if [ -n "$FLASH" ] ; then
-    removable="/sys/class/block/*/$FLASH/../removable"
-    if [ -e $removable ] ; then
-      if [ "$(cat $removable 2>/dev/null)" = "1" ] ; then
-        SUSPEND_DISABLED=yes
+  for i in $STORAGE $FLASH ; do
+    if [ -n "$i" ] ; then
+      removable="/sys/class/block/*/$i/../removable"
+      if [ -e $removable ] ; then
+        if [ "$(cat $removable 2>/dev/null)" = "1" ] ; then
+          echo "### BIG FAT WARNING" > /dev/kmsg
+          echo "### $i is removable. suspend/resume may not work" > /dev/kmsg
+        fi
       fi
     fi
-  fi
+  done
   # move some special filesystems
   /bin/busybox mount --move /dev /sysroot/dev
   /bin/busybox mount --move /proc /sysroot/proc
@@ -709,10 +699,6 @@
   # swap can not be used over nfs.(see scripts/mount-swap)
   if [ "$STORAGE_NETBOOT" = "yes" ] ; then
     echo "" > /sysroot/dev/.storage_netboot
-  fi
-  # no suspend when booted from nonpersistent storage
-  if [ "$SUSPEND_DISABLED" = "yes" ] ; then
-    echo "" > /sysroot/dev/.suspend_disabled
   fi
   # switch to new sysroot and start real init
   exec /bin/busybox switch_root /sysroot /usr/lib/systemd/systemd $INIT_ARGS
