@@ -19,7 +19,7 @@
 PKG_NAME="linux"
 case "$LINUX" in
   amlogic)
-    PKG_VERSION="amlogic-3.10-24e850b"
+    PKG_VERSION="amlogic-3.10-fa4c242"
     PKG_URL="$DISTRO_SRC/$PKG_NAME-$PKG_VERSION.tar.xz"
     ;;
   imx6)
@@ -163,7 +163,7 @@ make_target() {
   LDFLAGS="" make $KERNEL_IMAGE $KERNEL_MAKE_EXTRACMD
 
   if [ "$BUILD_ANDROID_BOOTIMG" = "yes" ]; then
-    LDFLAGS="" ./mkbootimg --kernel arch/arm/boot/$KERNEL_IMAGE --ramdisk $ROOT/$BUILD/image/initramfs.cpio \
+    LDFLAGS="" mkbootimg --kernel arch/arm/boot/$KERNEL_IMAGE --ramdisk $ROOT/$BUILD/image/initramfs.cpio \
       --second "$ANDROID_BOOTIMG_SECOND" --output arch/arm/boot/boot.img
     mv -f arch/arm/boot/boot.img arch/arm/boot/$KERNEL_IMAGE
   fi

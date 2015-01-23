@@ -9,7 +9,7 @@ index fd5f2a8..44feba9 100644
 +
 +#: system/settings/settings.xml
 +msgctxt "#60001"
-+msgid "Use software decoding SD video content"
++msgid "Use software decoding for SD video content"
 +msgstr "Использовать программное декодирование для SD видео контента"
 +
 +#: system/settings/settings.xml
