@@ -1,4 +1,4 @@
-From 812f07955d868239f599da095a8692d0be2d1b3f Mon Sep 17 00:00:00 2001
+From 5f75109bfd3d8351165384aa3db26484ec4fd8f7 Mon Sep 17 00:00:00 2001
 From: Alex Deryskyba <alex@codesnake.com>
 Date: Sat, 20 Sep 2014 04:43:52 +0300
 Subject: [PATCH 10/16] [aml] Fill audio packets completely when resampling to
