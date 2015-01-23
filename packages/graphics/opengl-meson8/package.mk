@@ -17,12 +17,13 @@
 ################################################################################
 
 PKG_NAME="opengl-meson8"
-PKG_VERSION="r4p0-01"
+PKG_VERSION="r4p1"
 PKG_REV="1"
 PKG_ARCH="arm"
 PKG_LICENSE="nonfree"
 PKG_SITE="http://www.arm.com/products/multimedia/mali-graphics-hardware/mali-450-mp.php"
-PKG_URL="https://dl.dropboxusercontent.com/u/18902170/$PKG_NAME-$PKG_VERSION.tar.xz"
+#PKG_URL="https://dl.dropboxusercontent.com/u/18902170/$PKG_NAME-$PKG_VERSION.tar.xz"
+PKG_URL="http://amlinux.ru/source/$PKG_NAME-$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain"
 PKG_PRIORITY="optional"
 PKG_SECTION="graphics"
