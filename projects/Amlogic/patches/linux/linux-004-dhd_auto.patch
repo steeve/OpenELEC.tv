@@ -8,10 +8,10 @@ index 0da1622..388bc0e 100755
  };
 +
 +const static char *nv_name[] = {
-+	"nvram_ap6210.txt",
-+	"nvram_ap6330.txt",
-+	"nvram_ap6181.txt",
-+	"nvram_ap6335e.txt",
++	"ap6210_nvram.txt",
++	"ap6330_nvram.txt",
++	"ap6181_nvram.txt",
++	"ap6335e_nvram.txt",
 +};
  
  #define htod32(i) i
