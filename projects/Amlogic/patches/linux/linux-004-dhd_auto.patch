@@ -16,7 +16,7 @@ index 0da1622..388bc0e 100755
  
  #define htod32(i) i
  #define htod16(i) i
-@@ -322,6 +329,69 @@ dhd_conf_set_nv_name_by_mac(dhd_pub_t *dhd, bcmsdh_info_t *sdh, char *nv_path)
+@@ -322,6 +329,67 @@ dhd_conf_set_nv_name_by_mac(dhd_pub_t *dhd, bcmsdh_info_t *sdh, char *nv_path)
  	}
  }
  
@@ -55,7 +55,6 @@ index 0da1622..388bc0e 100755
 +		if (dst[i] == '/') break;
 +		i--;
 +	}
-+	printf("%s: nvram_dst_path=%s\n", __FUNCTION__, dst);
 +	switch (chip) {
 +		case BCM4330_CHIP_ID:
 +					strcpy(&dst[i+1], nv_name[1]);
@@ -79,7 +78,6 @@ index 0da1622..388bc0e 100755
 +					strcpy(&dst[i+1], nv_name[3]);
 +						break;
 +	}
-+	printf("%s: chid_id=%s\n", __FUNCTION__, chip);
 +	printf("%s: nvram_path=%s\n", __FUNCTION__, dst);
 +}
 +
