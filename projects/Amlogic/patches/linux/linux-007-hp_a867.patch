@@ -1,0 +1,23 @@
+diff -Nru a/drivers/media/dvb-core/dvb-usb-ids.h b/drivers/media/dvb-core/dvb-usb-ids.h
+--- a/drivers/media/dvb-core/dvb-usb-ids.h	2015-01-22 23:04:55.000000000 +0300
++++ b/drivers/media/dvb-core/dvb-usb-ids.h	2015-01-27 12:55:07.674273631 +0300
+@@ -239,6 +239,7 @@
+ #define USB_PID_AVERMEDIA_A835B_4835			0x4835
+ #define USB_PID_AVERMEDIA_1867				0x1867
+ #define USB_PID_AVERMEDIA_A867				0xa867
++#define USB_PID_AVERMEDIA_HP_A867			0x0337
+ #define USB_PID_AVERMEDIA_TWINSTAR			0x0825
+ #define USB_PID_TECHNOTREND_CONNECT_S2400               0x3006
+ #define USB_PID_TECHNOTREND_CONNECT_S2400_8KEEPROM	0x3009
+diff -Nru a/drivers/media/usb/dvb-usb-v2/af9035.c b/drivers/media/usb/dvb-usb-v2/af9035.c
+--- a/drivers/media/usb/dvb-usb-v2/af9035.c	2015-01-22 23:04:55.000000000 +0300
++++ b/drivers/media/usb/dvb-usb-v2/af9035.c	2015-01-27 12:56:22.582054661 +0300
+@@ -1499,6 +1499,8 @@
+ 		&af9035_props, "AVerMedia HD Volar (A867)", NULL) },
+ 	{ DVB_USB_DEVICE(USB_VID_AVERMEDIA, USB_PID_AVERMEDIA_A867,
+ 		&af9035_props, "AVerMedia HD Volar (A867)", NULL) },
++	{ DVB_USB_DEVICE(USB_VID_AVERMEDIA, USB_PID_AVERMEDIA_HP_A867,
++		&af9035_props, "AVerMedia HP (A867)", NULL) },
+ 	{ DVB_USB_DEVICE(USB_VID_AVERMEDIA, USB_PID_AVERMEDIA_TWINSTAR,
+ 		&af9035_props, "AVerMedia Twinstar (A825)", NULL) },
+ 	{ DVB_USB_DEVICE(USB_VID_ASUS, USB_PID_ASUS_U3100MINI_PLUS,
