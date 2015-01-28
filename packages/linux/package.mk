@@ -20,9 +20,7 @@ PKG_NAME="linux"
 case "$LINUX" in
   amlogic)
     PKG_VERSION="amlogic-3.10-fa4c242"
-    PKG_VERSION="amlogic-3.10-7d09f72"
     PKG_URL="$DISTRO_SRC/$PKG_NAME-$PKG_VERSION.tar.xz"
-    PKG_URL="https://github.com/kszaq/linux-amlogic/releases/download/$PKG_VERSION/$PKG_NAME-$PKG_VERSION.tar.xz"
     ;;
   imx6)
     PKG_VERSION="cuboxi-3.14-dc5edb8"
@@ -152,7 +150,7 @@ make_target() {
     $SCRIPTS/install initramfs
   )
 
-  if [ "$BOOTLOADER" = "u-boot" -a -n "$KERNEL_UBOOT_EXTRA_TARGET" ]; then
+  if [ -n "$KERNEL_UBOOT_EXTRA_TARGET" ]; then
     for extra_target in "$KERNEL_UBOOT_EXTRA_TARGET"; do
       LDFLAGS="" make $extra_target
     done
@@ -204,16 +202,6 @@ makeinstall_target() {
     mkdir -p $INSTALL/usr/share/bootloader
     for dtb in arch/arm/boot/dts/*.dtb; do
       cp $dtb $INSTALL/usr/share/bootloader 2>/dev/null || :
-    done
-  elif [ "$BOOTLOADER" = "bcm2835-bootloader" ]; then
-    mkdir -p $INSTALL/usr/share/bootloader/overlays
-    touch $INSTALL/usr/share/bootloader/overlays/README.TXT
-    for dtb in arch/arm/boot/dts/*.dtb; do
-      if `echo "$dtb" | grep ".*/bcm2[^/]*$" >/dev/null`; then
-        cp $dtb $INSTALL/usr/share/bootloader 2>/dev/null || :
-      else
-        cp $dtb $INSTALL/usr/share/bootloader/overlays 2>/dev/null || :
-      fi
     done
   fi
 
