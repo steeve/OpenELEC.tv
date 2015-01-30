@@ -14,7 +14,7 @@ new file mode 100644
 index 0000000..64cb43c
 --- /dev/null
 +++ b/arch/arm/boot/dts/amlogic/meson8b_s859.dtd
-@@ -0,0 +1,1924 @@
+@@ -0,0 +1,1930 @@
 +/dts-v1/;
 +/// ***************************************************************************************\n
 +//$$ PROJECT="meson8b"
@@ -752,7 +752,7 @@ index 0000000..64cb43c
 +//$$ L2 PROP_U32 16*3 = "dvfs_table"
 +        vcck_dvfs {
 +            dvfs_id     = <1>;                                  /** must be value of (1 << n)            */
-+            table_count = <12>;                                 /** must be correct count for dvfs_table */
++            table_count = <13>;                                 /** must be correct count for dvfs_table */
 +            dvfs_table  = <
 +            /* NOTE: frequent in this table must be ascending order */
 +            /* frequent(Khz)    min_uV      max_uV                  */
@@ -766,8 +766,9 @@ index 0000000..64cb43c
 +                 816000         900000      900000
 +                1008000         920000      920000
 +                1200000         970000      970000
-+                1320000        1050000     1050000
++                1320000        1100000     1100000
 +                1488000        1100000     1100000
++                1536000        1140000     1140000
 +            >;
 +        };
 +    };
@@ -1464,11 +1465,15 @@ index 0000000..64cb43c
 +//$$ L2 PROP_U32 = "vendor_id"
 +//$$ L2 PROP_STR = "product_desc"
 +//$$ L2 PROP_STR = "cec_osd_string"
++//$$ L2 PROP_U32 = "cec_config"
++//$$ L2 PROP_U32 = "ao_cec"
 +        vend_data: vend_data{
 +            vendor_name = "Amlogic";           /* Max Chars: 8     */
 +            vendor_id = <0x000000>;                 /* Refer to http://standards.ieee.org/develop/regauth/oui/oui.txt   */
 +            product_desc = "M8 MBox SKTv1";        /* Max Chars: 16    */
 +            cec_osd_string = "Amlogic MBox";        /* Max Chars: 14    */
++            cec_config = <0x00000f>; /* 4 bytes: use to control cec switch on/off; distinguish between Mbox and Tablet. <0x00000f>:Mbox; <0x000000> or no this value:Tablet*/
++            ao_cec = <0x000001>; /* switch between ao-cec and ee-cec:: 1: ao-cec; 0: ee-cec */
 +        };
 +
 +//$$ MATCH "HDMI_pwr-ctrl_match" = <&pwr_ctrl>
@@ -1506,6 +1511,7 @@ index 0000000..64cb43c
 +//$$ L2 PROP_STR = "status"
 +    cpufreq-meson{
 +        compatible = "amlogic,cpufreq-meson";
++        syspll_fixed;
 +        status = "okay";
 +    };
 +
