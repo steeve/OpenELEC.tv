@@ -17,7 +17,7 @@
 # Skins to install (Confluence)
 # Space separated list is supported,
 # e.g. SKINS="Confluence"
-  SKINS="Mimic"
+  SKINS="Mimic Conq"
 
 # Default Skin (Confluence)
   SKIN_DEFAULT="Mimic"
