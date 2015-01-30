@@ -47,9 +47,10 @@ post_unpack() {
 }
 
 make_target() {
-  : # nop
+    : # nop
 }
 
 makeinstall_target() {
-    cp -R $PKG_ADDON_ID $INSTALL/usr/share/kodi/addons/$PKG_ADDON_ID
+    mkdir -p $INSTALL/usr/share/kodi/addons/
+    cp -R $PKG_ADDON_ID $INSTALL/usr/share/kodi/addons/
 }

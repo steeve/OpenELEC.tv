@@ -45,5 +45,6 @@ make_target() {
 }
 
 makeinstall_target() {
-    cp -R $PKG_NAME $INSTALL/usr/share/kodi/addons/$PKG_NAME
+    mkdir -p $INSTALL/usr/share/kodi/addons/
+    cp -R $PKG_ADDON_ID $INSTALL/usr/share/kodi/addons/
 }
