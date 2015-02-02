@@ -1,0 +1,11 @@
+[Unit]
+Description=RNG-Tools service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/rngd
+LimitNPROC=1
+TimeoutStopSec=1s
+
+[Install]
+WantedBy=system.target
