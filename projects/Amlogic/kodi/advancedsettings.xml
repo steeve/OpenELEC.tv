@@ -2,21 +2,20 @@
 <advancedsettings>
   <showexitbutton>false</showexitbutton>
 
+  <fanartres>720</fanartres>
+  <imageres>540</imageres>
+
   <network>
-    <cachemembuffersize>20971520</cachemembuffersize>
+    <cachemembuffersize>0</cachemembuffersize>
+    <curlclienttimeout>60</curlclienttimeout>
+    <curllowspeedtime>10</curllowspeedtime>
+    <buffermode>3</buffermode>
+    <readbufferfactor>1.0</readbufferfactor>
   </network>
 
   <samba>
     <clienttimeout>30</clienttimeout>
   </samba>
 
-  <network>
-    <readbufferfactor>4.0</readbufferfactor>
-  </network>
-
-  <pvr>
-    <minvideocachelevel>5</minvideocachelevel>
-    <minaudiocachelevel>20</minaudiocachelevel>
-  </pvr>
   <cputempcommand>echo "$(cat /sys/class/hwmon/hwmon1/temp1_input) C"</cputempcommand>
 </advancedsettings>
