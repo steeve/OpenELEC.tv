@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<keymap>
+    <global>
+        <keyboard>
+            <home>ActivateWindow(Home)</home>
+            <power>noop</power>
+        </keyboard>
+    </global>
+    <FullscreenVideo>
+        <keyboard>
+            <backspace>noop</backspace>
+            <home>noop</home>
+            <c>ActivateWindow(SubtitleSearch)</c>
+        </keyboard>
+    </FullscreenVideo>
+    <VirtualKeyboard>
+        <keyboard>
+            <c>noop</c>
+        </keyboard>
+    </VirtualKeyboard>
+</keymap>
