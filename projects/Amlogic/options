@@ -353,3 +353,6 @@
   ADDON_URL="$ADDON_SERVER_URL/$ADDON_PATH"
 
   AMREMOTE_SUPPORT="yes"
+
+# Hardware random number generator daemon
+HW_RNG="yes"
