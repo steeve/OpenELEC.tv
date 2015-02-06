@@ -501,7 +501,13 @@
   check_update() {
     progress "Checking for updates"
 
-    UPDATE_TAR=`ls -1 "$UPDATE_DIR"/*.tar 2>/dev/null | head -n 1`
+    # Mount sysroot to get the current OS version
+    mount_part "/flash/$IMAGE_SYSTEM" "/sysroot" "ro,loop"
+    local OS_VERSION_TAG=`sed -n -e 's/VERSION="\(.*\)"/\1/p' < /sysroot/etc/os-release`
+    umount /sysroot
+
+    # Do not count the current OS version as update
+    UPDATE_TAR=`ls -1 "$UPDATE_DIR"/*.tar 2>/dev/null | grep -v ${OS_VERSION_TAG} | head -n 1`
     if [ -f "$UPDATE_DIR/$UPDATE_KERNEL" -a -f "$UPDATE_DIR/$UPDATE_SYSTEM" -o -f "$UPDATE_TAR" ] ; then
       if [ "$UPDATE_DISABLED" = "yes" ] ; then
         rm -rf $UPDATE_DIR/[0-9a-zA-Z]* &>/dev/null
@@ -517,7 +523,10 @@
         mkdir -p $UPDATE_DIR/.tmp &>/dev/null
         tar -xf "$UPDATE_TAR" -C $UPDATE_DIR/.tmp &>/dev/null
         mv $UPDATE_DIR/.tmp/*/target/* $UPDATE_DIR &>/dev/null
-        rm -f "$UPDATE_TAR" &>/dev/null
+        # Do not remove the update .tar as this folder is now managed by
+        # btsync, and we need to be able to share with other peers too
+        # (C&C style if you wish)
+        # rm -f "$UPDATE_TAR" &>/dev/null
         rm -rf $UPDATE_DIR/.tmp &>/dev/null
         sync
         if [ ! -f "$UPDATE_DIR/$UPDATE_KERNEL" -o ! -f "$UPDATE_DIR/$UPDATE_SYSTEM" ] ; then
@@ -599,16 +608,19 @@
           esac
           update_file "System" "$UPDATE_SYSTEM" "/flash/$IMAGE_SYSTEM"
           update_bootloader
-          rm -rf $UPDATE_DIR/[0-9a-zA-Z]* &>/dev/null
+          # Erase all the files, save for the .tar update
+          find $UPDATE_DIR -not -name '*.tar' -delete >/dev/null
           do_reboot
         else
-          rm -rf $UPDATE_DIR/[0-9a-zA-Z]* &>/dev/null
+          # Erase all the files, save for the .tar update
+          find $UPDATE_DIR -not -name '*.tar' -delete >/dev/null
           echo "md5 check failed. normal startup in 30s..."
           sync
           usleep 30000000
         fi
       else
-        rm -rf $UPDATE_DIR/[0-9a-zA-Z]* &>/dev/null
+        # Erase all the files, save for the .tar update
+        find $UPDATE_DIR -not -name '*.tar' -delete >/dev/null
         echo "size check failed. normal startup in 30s..."
         sync
         usleep 30000000
