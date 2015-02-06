@@ -1,0 +1,4 @@
+KERNEL=="ttyS2", SUBSYSTEMS=="tty", ENV{SYSTEMD_WANTS}="bluetooth.service"
+
+
+KERNEL=="ttyS2", SUBSYSTEMS=="tty", RUN+="modprobe hci-uart"
