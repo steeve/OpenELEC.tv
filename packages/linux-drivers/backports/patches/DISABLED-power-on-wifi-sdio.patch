@@ -1,0 +1,124 @@
+diff -Nbur backports-3.19-rc1-1/drivers/net/wireless/brcm80211/brcmfmac/bcmsdh.c backports-3.19-rc1-1-mod/drivers/net/wireless/brcm80211/brcmfmac/bcmsdh.c
+--- backports-3.19-rc1-1/drivers/net/wireless/brcm80211/brcmfmac/bcmsdh.c	2014-12-21 20:18:12.000000000 +0100
++++ backports-3.19-rc1-1-mod/drivers/net/wireless/brcm80211/brcmfmac/bcmsdh.c	2015-01-29 05:09:45.000000000 +0100
+@@ -33,6 +33,7 @@
+ #include <linux/errno.h>
+ #include <linux/module.h>
+ #include <net/cfg80211.h>
++#include <linux/wlan_plat.h>
+
+ #include <defs.h>
+ #include <brcm_hw_ids.h>
+@@ -1183,7 +1184,7 @@
+ static struct sdio_driver brcmf_sdmmc_driver = {
+ 	.probe = brcmf_ops_sdio_probe,
+ 	.remove = brcmf_ops_sdio_remove,
+-	.name = BRCMFMAC_SDIO_PDATA_NAME,
++	.name = "aml_broadcm_wifi",
+ 	.id_table = brcmf_sdmmc_ids,
+ 	.drv = {
+ 		.owner = THIS_MODULE,
+@@ -1220,27 +1221,97 @@
+ static struct platform_driver brcmf_sdio_pd = {
+ 	.remove		= brcmf_sdio_pd_remove,
+ 	.driver		= {
+-		.name	= BRCMFMAC_SDIO_PDATA_NAME,
++		.name	= "aml_broadcm_wifi",
+ 	}
+ };
+
+-void brcmf_sdio_register(void)
++static struct wifi_platform_data *wifi_control_data = NULL;
++
++int wifi_set_power(int on, unsigned long msec)
++{
++   printk("%s = %d\n", __FUNCTION__, on);
++   if (wifi_control_data && wifi_control_data->set_power) {
++       wifi_control_data->set_power(on);
++   }
++   if (msec)
++       msleep(msec);
++   return 0;
++}
++
++static int wifi_set_carddetect(int on)
++{
++   printk("%s = %d\n", __FUNCTION__, on);
++   if (wifi_control_data && wifi_control_data->set_carddetect) {
++       wifi_control_data->set_carddetect(on);
++   }
++   return 0;
++}
++
++static int wifi_probe(struct platform_device *pdev)
+ {
+ 	int ret;
++   struct wifi_platform_data *wifi_ctrl =
++       (struct wifi_platform_data *)(pdev->dev.platform_data);
++
++   printk("## %s\n", __FUNCTION__);
++   //wifi_irqres = platform_get_resource_byname(pdev, IORESOURCE_IRQ, "bcmdhd_wlan_irq");
++   wifi_control_data = wifi_ctrl;
++
++   wifi_set_power(1, 0);   /* Power On */
++   wifi_set_carddetect(1); /* CardDetect (0->1) */
+
+ 	ret = sdio_register_driver(&brcmf_sdmmc_driver);
+ 	if (ret)
+ 		brcmf_err("sdio_register_driver failed: %d\n", ret);
++
++   return 0;
++}
++
++static int wifi_remove(struct platform_device *pdev)
++{
++   struct wifi_platform_data *wifi_ctrl =
++       (struct wifi_platform_data *)(pdev->dev.platform_data);
++
++   printk("## %s\n", __FUNCTION__);
++   wifi_control_data = wifi_ctrl;
++
++   wifi_set_power(0, 0);   /* Power Off */
++   wifi_set_carddetect(0); /* CardDetect (1->0) */
++
++   //up(&wifi_control_sem);
++   return 0;
++}
++
++static struct platform_driver wifi_device = {
++   .probe          = wifi_probe,
++   .remove         = wifi_remove,
++// .suspend        = wifi_suspend,
++// .resume         = wifi_resume,
++   .driver         = {
++   .name   = "aml_broadcm_wifi_22",
++   }
++};
++
++void brcmf_sdio_register(void)
++{
++	int ret;
++
++	// ret = sdio_register_driver(&brcmf_sdmmc_driver);
++	// if (ret)
++	// 	brcmf_err("sdio_register_driver failed: %d\n", ret);
++	brcmf_dbg(SDIO, "Trying wifi powerup method\n");
++	platform_driver_register(&wifi_device);
+ }
+
+ void brcmf_sdio_exit(void)
+ {
+ 	brcmf_dbg(SDIO, "Enter\n");
+
+-	if (brcmfmac_sdio_pdata)
+-		platform_driver_unregister(&brcmf_sdio_pd);
+-	else
+-		sdio_unregister_driver(&brcmf_sdmmc_driver);
++	// if (brcmfmac_sdio_pdata)
++	// 	platform_driver_unregister(&brcmf_sdio_pd);
++	// else
++	// 	sdio_unregister_driver(&brcmf_sdmmc_driver);
++	platform_driver_unregister(&wifi_device);
+ }
+
+ void __init brcmf_sdio_init(void)
