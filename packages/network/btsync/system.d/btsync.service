@@ -1,0 +1,10 @@
+[Unit]
+Description=BitTorrent Sync Service
+After=network.target
+
+[Service]
+User=btsync
+ExecStart=/usr/bin/btsync --nodaemon --config /etc/btsync.conf
+
+[Install]
+WantedBy=multi-user.target
