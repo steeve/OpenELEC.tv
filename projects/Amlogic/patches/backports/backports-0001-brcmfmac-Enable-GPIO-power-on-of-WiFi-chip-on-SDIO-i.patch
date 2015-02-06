@@ -1,0 +1,61 @@
+From 07fb6f30c95e0ae0040c3374fdba16980996a7dd Mon Sep 17 00:00:00 2001
+From: Steeve Morin <steeve.morin@gmail.com>
+Date: Tue, 10 Feb 2015 17:12:05 +0100
+Subject: [PATCH 1/2] [brcmfmac] Enable GPIO power on of WiFi chip on SDIO init
+
+Signed-off-by: Steeve Morin <steeve.morin@gmail.com>
+---
+ drivers/net/wireless/brcm80211/brcmfmac/bcmsdh.c | 25 ++++++++++++++++++++----
+ 1 file changed, 21 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/net/wireless/brcm80211/brcmfmac/bcmsdh.c b/drivers/net/wireless/brcm80211/brcmfmac/bcmsdh.c
+index 3c06e93..0032e71 100644
+--- a/drivers/net/wireless/brcm80211/brcmfmac/bcmsdh.c
++++ b/drivers/net/wireless/brcm80211/brcmfmac/bcmsdh.c
+@@ -62,6 +62,10 @@ static int brcmf_sdiod_txglomsz = BRCMF_DEFAULT_TXGLOM_SIZE;
+ module_param_named(txglomsz, brcmf_sdiod_txglomsz, int, 0);
+ MODULE_PARM_DESC(txglomsz, "maximum tx packet chain size [SDIO]");
+ 
++extern int wifi_setup_dt();
++extern void extern_wifi_set_enable(int is_on);
++extern void sdio_reinit(void);
++
+ static irqreturn_t brcmf_sdiod_oob_irqhandler(int irq, void *dev_id)
+ {
+ 	struct brcmf_bus *bus_if = dev_get_drvdata(dev_id);
+@@ -1068,10 +1072,10 @@ static int brcmf_ops_sdio_probe(struct sdio_func *func,
+ 	/* wowl can be supported when KEEP_POWER is true and (WAKE_SDIO_IRQ
+ 	 * is true or when platform data OOB irq is true).
+ 	 */
+-	if ((sdio_get_host_pm_caps(sdiodev->func[1]) & MMC_PM_KEEP_POWER) &&
+-	    ((sdio_get_host_pm_caps(sdiodev->func[1]) & MMC_PM_WAKE_SDIO_IRQ) ||
+-	     (sdiodev->pdata->oob_irq_supported)))
+-		bus_if->wowl_supported = true;
++	// if ((sdio_get_host_pm_caps(sdiodev->func[1]) & MMC_PM_KEEP_POWER) &&
++	//     ((sdio_get_host_pm_caps(sdiodev->func[1]) & MMC_PM_WAKE_SDIO_IRQ) ||
++	//      (sdiodev->pdata->oob_irq_supported)))
++	// 	bus_if->wowl_supported = true;
+ #endif
+ 
+ 	atomic_set(&sdiodev->suspend, false);
+@@ -1252,4 +1256,17 @@ void __init brcmf_sdio_init(void)
+ 	ret = platform_driver_probe(&brcmf_sdio_pd, brcmf_sdio_pd_probe);
+ 	if (ret == -ENODEV)
+ 		brcmf_dbg(SDIO, "No platform data available.\n");
++
++	printk(KERN_INFO "[meson-wifi] Setting up wifi device tree\n");
++	if (wifi_setup_dt()) {
++		printk("[meson-wifi] wifi_dt: fail to setup dt\n");
++	}
++	printk(KERN_INFO "[meson-wifi] Wifi power up via GPIO\n");
++	extern_wifi_set_enable(0);
++	mdelay(200);
++	extern_wifi_set_enable(1);
++	printk(KERN_INFO "[meson-wifi] Done wifi power up, reinit SDIO\n");
++	mdelay(200);
++	sdio_reinit();
++	printk(KERN_INFO "[meson-wifi] Wifi setup done\n");
+ }
+-- 
+2.2.1
+
