@@ -1,0 +1,26 @@
+From eebbe81db3e81042e707f30926de9938a289270e Mon Sep 17 00:00:00 2001
+From: Steeve Morin <steeve.morin@gmail.com>
+Date: Thu, 29 Jan 2015 05:17:22 +0100
+Subject: [PATCH 3/3] Make SDIO WiFi compatible with brcmfmac
+
+Signed-off-by: Steeve Morin <steeve.morin@gmail.com>
+---
+ arch/arm/boot/dts/amlogic/meson8b_s859.dtd | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/amlogic/meson8b_s859.dtd b/arch/arm/boot/dts/amlogic/meson8b_s859.dtd
+index 0148310..00391b2 100644
+--- a/arch/arm/boot/dts/amlogic/meson8b_s859.dtd
++++ b/arch/arm/boot/dts/amlogic/meson8b_s859.dtd
+@@ -389,7 +389,7 @@ void root_func(){
+ //$$ L2 PROP_STR = "power_on_pin"
+ //$$ L2 PROP_STR = "clock_32k_pin"
+     wifi{
+-        compatible = "amlogic,aml_broadcm_wifi";
++        compatible = "amlogic,aml_broadcm_wifi", "brcm,bcm4329-fmac";
+         dev_name = "aml_broadcm_wifi";
+         status = "okay";
+         interrupt_pin = "GPIOX_21";
+-- 
+2.2.1
+

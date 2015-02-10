@@ -1,0 +1,32 @@
+From e941e438419efa7058287458de1a404b0fb3944f Mon Sep 17 00:00:00 2001
+From: Steeve Morin <steeve.morin@gmail.com>
+Date: Mon, 9 Feb 2015 14:35:49 +0100
+Subject: [PATCH 2/3] Add meson-rng to s859
+
+Signed-off-by: Steeve Morin <steeve.morin@gmail.com>
+---
+ arch/arm/boot/dts/amlogic/meson8b_s859.dtd | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/amlogic/meson8b_s859.dtd b/arch/arm/boot/dts/amlogic/meson8b_s859.dtd
+index 64cb43c..0148310 100644
+--- a/arch/arm/boot/dts/amlogic/meson8b_s859.dtd
++++ b/arch/arm/boot/dts/amlogic/meson8b_s859.dtd
+@@ -1920,5 +1920,13 @@ sdhc_sd_clk_cmd_pins:sdhc_sd_clk_cmd_pins{
+         interruptnum = <40>;
+         new_maclogic = <1>;
+     };
+-
++/// ***************************************************************************************
++/// -   RNG
++//$$ MODULE="RNG"
++//$$ DEVICE="meson-rng"
++//$$ L2 PROP_STR = "status"
++    meson-rng{
++        compatible = "amlogic,meson-rng";
++        status = "ok";
++    };
+ }; /* end of / */
+-- 
+2.2.1
+
