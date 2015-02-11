@@ -21,3 +21,5 @@
 
 # Default Skin (Confluence)
   SKIN_DEFAULT="Mimic"
+
+ADDITIONAL_DRIVERS="brcmfmac"
