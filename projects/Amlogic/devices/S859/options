@@ -17,9 +17,9 @@
 # Skins to install (Confluence)
 # Space separated list is supported,
 # e.g. SKINS="Confluence"
-  SKINS="Mimic Conq"
+  SKINS="Confluence PersonaMod"
 
 # Default Skin (Confluence)
-  SKIN_DEFAULT="Mimic"
+  SKIN_DEFAULT="PersonaMod"
 
 ADDITIONAL_DRIVERS="brcmfmac"
