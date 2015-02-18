@@ -19,7 +19,7 @@
 ################################################################################
 
 PKG_NAME="plugin.video.pulsar"
-PKG_VERSION="0.4.5"
+PKG_VERSION="0.4.6"
 PKG_REV="4"
 PKG_ARCH="any"
 PKG_LICENSE="Non Commercial"
