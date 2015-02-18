@@ -506,6 +506,8 @@
     local OS_VERSION_TAG=`sed -n -e 's/VERSION="\(.*\)"/\1/p' < /sysroot/etc/os-release`
     umount /sysroot
 
+    echo "Current OS Version is $OS_VERSION_TAG"
+
     # Do not count the current OS version as update
     UPDATE_TAR=`ls -1 "$UPDATE_DIR"/*.tar 2>/dev/null | grep -v ${OS_VERSION_TAG} | head -n 1`
     if [ -f "$UPDATE_DIR/$UPDATE_KERNEL" -a -f "$UPDATE_DIR/$UPDATE_SYSTEM" -o -f "$UPDATE_TAR" ] ; then
@@ -519,7 +521,7 @@
 
       # check for .tar
       if [ -f "$UPDATE_TAR" ] ; then
-        echo "Found new .tar archive. extracting..."
+        echo "Found new .tar archive $UPDATE_TAR. extracting..."
         mkdir -p $UPDATE_DIR/.tmp &>/dev/null
         tar -xf "$UPDATE_TAR" -C $UPDATE_DIR/.tmp &>/dev/null
         mv $UPDATE_DIR/.tmp/*/target/* $UPDATE_DIR &>/dev/null
@@ -609,18 +611,18 @@
           update_file "System" "$UPDATE_SYSTEM" "/flash/$IMAGE_SYSTEM"
           update_bootloader
           # Erase all the files, save for the .tar update
-          find $UPDATE_DIR -not -name '*.tar' -delete >/dev/null
+          rm -rf $(ls -1 $UPDATE_DIR 2>/dev/null | grep -v \.tar | sed "s|\(.*\)|$UPDATE_DIR/\1|g")
           do_reboot
         else
           # Erase all the files, save for the .tar update
-          find $UPDATE_DIR -not -name '*.tar' -delete >/dev/null
+          rm -rf $(ls -1 $UPDATE_DIR 2>/dev/null | grep -v \.tar | sed "s|\(.*\)|$UPDATE_DIR/\1|g")
           echo "md5 check failed. normal startup in 30s..."
           sync
           usleep 30000000
         fi
       else
         # Erase all the files, save for the .tar update
-        find $UPDATE_DIR -not -name '*.tar' -delete >/dev/null
+        rm -rf $(ls -1 $UPDATE_DIR 2>/dev/null | grep -v \.tar | sed "s|\(.*\)|$UPDATE_DIR/\1|g")
         echo "size check failed. normal startup in 30s..."
         sync
         usleep 30000000
