@@ -35,7 +35,7 @@ PKG_AUTORECONF="no"
 make_target() {
   unset CC CFLAGS CXXFLAGS LDFLAGS MAKEFLAGS
 
-  cd ../backports-*
+  cd $(get_build_dir backports)
 
   make clean defconfig-${PKG_NAME} modules V=1 \
        ARCH=$TARGET_ARCH \
