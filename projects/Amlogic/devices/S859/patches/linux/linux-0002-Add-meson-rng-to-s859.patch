@@ -1,7 +1,7 @@
 From e941e438419efa7058287458de1a404b0fb3944f Mon Sep 17 00:00:00 2001
 From: Steeve Morin <steeve.morin@gmail.com>
 Date: Mon, 9 Feb 2015 14:35:49 +0100
-Subject: [PATCH 2/3] Add meson-rng to s859
+Subject: [PATCH 2/5] Add meson-rng to s859
 
 Signed-off-by: Steeve Morin <steeve.morin@gmail.com>
 ---

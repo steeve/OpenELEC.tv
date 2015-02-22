@@ -1,0 +1,67 @@
+From cb00ef734b3fe4b12cc805631166fc1c8bd47b75 Mon Sep 17 00:00:00 2001
+From: Steeve Morin <steeve.morin@gmail.com>
+Date: Fri, 20 Feb 2015 14:15:39 +0100
+Subject: [PATCH 5/5] Backport MMC max_blk_count fix
+
+Signed-off-by: Steeve Morin <steeve.morin@gmail.com>
+---
+ drivers/amlogic/mmc/aml_sdhc.c    | 6 +++---
+ drivers/amlogic/mmc/aml_sdhc_m8.c | 6 +++---
+ drivers/amlogic/mmc/aml_sdio.c    | 4 ++--
+ 3 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/amlogic/mmc/aml_sdhc.c b/drivers/amlogic/mmc/aml_sdhc.c
+index 857d207..95e64c7 100755
+--- a/drivers/amlogic/mmc/aml_sdhc.c
++++ b/drivers/amlogic/mmc/aml_sdhc.c
+@@ -1119,10 +1119,10 @@ static int aml_sdhc_probe(struct platform_device *pdev)
+         mmc->alldev_claim = &aml_sdhc_claim;
+         mmc->ios.clock = 400000;
+         mmc->ios.bus_width = MMC_BUS_WIDTH_1;
+-        mmc->max_blk_count = 4095;
+-        mmc->max_blk_size = 4095;
++        mmc->max_blk_count = 256;
++        mmc->max_blk_size = 512;
+         mmc->max_req_size = pdata->max_req_size;
+-        mmc->max_seg_size = mmc->max_req_size;
++        mmc->max_seg_size = 64 * 1024;
+         mmc->max_segs = 1024;
+         mmc->ocr_avail = pdata->ocr_avail;
+         mmc->ocr = pdata->ocr_avail;
+diff --git a/drivers/amlogic/mmc/aml_sdhc_m8.c b/drivers/amlogic/mmc/aml_sdhc_m8.c
+index 58781c1..9eb1a7c 100755
+--- a/drivers/amlogic/mmc/aml_sdhc_m8.c
++++ b/drivers/amlogic/mmc/aml_sdhc_m8.c
+@@ -2393,10 +2393,10 @@ static int aml_sdhc_probe(struct platform_device *pdev)
+         mmc->alldev_claim = &aml_sdhc_claim;
+         mmc->ios.clock = 400000;
+         mmc->ios.bus_width = MMC_BUS_WIDTH_1;
+-        mmc->max_blk_count = 4095; //
+-        mmc->max_blk_size = 4095; //
++        mmc->max_blk_count = 256;
++        mmc->max_blk_size = 512;
+         mmc->max_req_size = pdata->max_req_size;
+-        mmc->max_seg_size = mmc->max_req_size;
++        mmc->max_seg_size = 64 * 1024;
+         mmc->max_segs = 1024;
+         mmc->ocr_avail = pdata->ocr_avail;
+         mmc->ocr = pdata->ocr_avail;
+diff --git a/drivers/amlogic/mmc/aml_sdio.c b/drivers/amlogic/mmc/aml_sdio.c
+index 5b1c4ac..639fee1 100755
+--- a/drivers/amlogic/mmc/aml_sdio.c
++++ b/drivers/amlogic/mmc/aml_sdio.c
+@@ -1376,9 +1376,9 @@ static int aml_sdio_probe(struct platform_device *pdev)
+         mmc->alldev_claim = &aml_sdio_claim;
+         mmc->ios.clock = 400000;
+         mmc->ios.bus_width = MMC_BUS_WIDTH_1;
+-        mmc->max_blk_count = 4095;
+-        mmc->max_blk_size = 4095;
++        mmc->max_blk_count = 256;
+         mmc->max_req_size = pdata->max_req_size;
++        mmc->max_blk_size = mmc->max_req_size / mmc->max_blk_count;
+         mmc->max_seg_size = mmc->max_req_size;
+         mmc->max_segs = 1024;
+         mmc->ocr_avail = pdata->ocr_avail;
+-- 
+2.2.1
+
