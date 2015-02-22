@@ -19,7 +19,7 @@
 ################################################################################
 
 PKG_NAME="plugin.video.pulsar"
-PKG_VERSION="0.4.6"
+PKG_VERSION="0.4.7"
 PKG_REV="4"
 PKG_ARCH="any"
 PKG_LICENSE="Non Commercial"
@@ -48,4 +48,6 @@ makeinstall_target() {
     mkdir -p $INSTALL/usr/share/kodi/addons/
     cp -R $PKG_ADDON_ID $INSTALL/usr/share/kodi/addons/
     touch $INSTALL/usr/share/kodi/addons/$PKG_ADDON_ID/.firstrun
+
+    cp -R $PKG_DIR/repository.pulsar $INSTALL/usr/share/kodi/addons/
 }
